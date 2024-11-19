@@ -28,7 +28,7 @@ Tree* TreeCtor(Node* root) {
     }
 
     tree->root = root;
-    tree->size = (TreeNodesCount() - 1) / 2;
+    tree->size = 1;
 
     return tree;
 }
@@ -38,7 +38,7 @@ Tree* TreeCtor(Node* root) {
     \param [in] value - node data
     @return The pointer on the node
 */
-Node* CreateNode(NodeDataType type,NodeData value) {
+Node* CreateNode(NodeDataType type, NodeData value, Node* left, Node* right) {
     Node* node = (Node*) calloc(1, sizeof(Node));
     if (!node) {
         fprintf(stderr, RED("MEMORY ERROR!\n"));
@@ -46,8 +46,10 @@ Node* CreateNode(NodeDataType type,NodeData value) {
         return NULL;
     }
 
-    node->type = type;
-    node->data = value;
+    node->type  =  type;
+    node->data  = value;
+    node->left  =  left;
+    node->right = right;
 
     return node;
 }
@@ -85,17 +87,6 @@ FuncReturnCode TreeDtor(Tree* tree) {
     FREE(tree);
 
     return SUCCESS;
-}
-
-/*!
-    @brief Function that counts nodes from the file
-    @return The number of the nodes
-*/
-size_t TreeNodesCount() {
-    static size_t num = 0;
-    num++;
-
-    return num;
 }
 
 /*!
@@ -163,7 +154,7 @@ FuncReturnCode WriteSubTree(FILE* filename, Node* node) {
 
     fprintf(filename, "{ ");
 
-    fprintf(filename, "\"%s\" ", node->data);
+    fprintf(filename, "\"%d\" ", node->data);
     WriteSubTree(filename, node->left);
     WriteSubTree(filename, node->right);
 

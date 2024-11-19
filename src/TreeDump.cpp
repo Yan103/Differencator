@@ -8,10 +8,10 @@
 #include "TreeDump.h"
 
 /// @brief Constant for LOG filename
-const char* LOG_FILENAME            = "/home/yan/projects/Akinator/DumpFiles/log.html";
+const char* LOG_FILENAME            = "/home/yan/projects/Differencator/DumpFiles/log.html";
 
 /// @brief Constant for DOT filename
-const char* DOT_FILENAME            = "/home/yan/projects/Akinator/DumpFiles/dump.dot";
+const char* DOT_FILENAME            = "/home/yan/projects/Differencator/DumpFiles/dump.dot";
 
 /// @brief Constant for command busser size
 const int   COMMAND_BUFFER_CONSTANT = 500;
@@ -48,7 +48,7 @@ int TreeDump(Tree* tree, const char* func, int line, const char* title, ...) {
     }
     fclose(dot_file);
 
-    sprintf(command, "dot -Tpng %s -o /home/yan/projects/Akinator/DumpFiles/dump%d.png",
+    sprintf(command, "dot -Tpng %s -o /home/yan/projects/Differencator/DumpFiles/dump%d.png",
                                  DOT_FILENAME,                                   dump_id);
 
     int system_end = system(command);
@@ -122,22 +122,22 @@ FuncReturnCode CreateDotNode(FILE* filename, Node* node) {
 
     if (node->left) {
         fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightgreen\","
-                          "label=\"{ %s }\"]\n", node, node->data);
-        fprintf(filename, "\tnode%p->node%p[xlabel=\"No\"]\n", node, node->left);
+                          "label=\"type: %d| value: %d\"]\n", node, node->type, node->data);
+        fprintf(filename, "\tnode%p->node%p\n", node, node->left);
         CreateDotNode(filename, node->left);
     } else {
         fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightpink\","
-                          "label=\"{ %s }\"]\n", node, node->data);
+                          "label=\"type: %d| value: %d\"]\n", node, node->type, node->data);
     }
 
     if (node->right) {
         fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightgreen\","
-                          "label=\"{ %s }\"]\n", node, node->data);
-        fprintf(filename, "\tnode%p->node%p[xlabel=\"Yes\"]\n", node, node->right);
+                          "label=\"type: %d| value: %d\"]\n", node, node->type, node->data);
+        fprintf(filename, "\tnode%p->node%p\n", node, node->right);
         CreateDotNode(filename, node->right);
     } else {
         fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightpink\","
-                          "label=\"{ %s }\"]\n", node, node->data);
+                          "label=\"type: %d| value: %d\"]\n", node, node->type, node->data);
     }
 
     return SUCCESS;

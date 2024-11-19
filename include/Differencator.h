@@ -1,0 +1,4 @@
+#ifndef DIFFERENCATOR_H
+#define DIFFERENCATOR_H
+
+#endif // DIFFERENCATOR_H

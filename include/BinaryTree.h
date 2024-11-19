@@ -41,10 +41,11 @@ Tree* TreeCtor(Node* root);
 
 /*!
     @brief Function that creates node
+    \param [in]  type - node data type
     \param [in] value - node data
     @return The pointer on the node
 */
-Node* CreateNode(NodeData value);
+Node* CreateNode(NodeDataType type, NodeData value, Node* left, Node* right);
 
 /*!
     @brief Function that deletes binary tree
@@ -59,12 +60,6 @@ FuncReturnCode TreeDtor(Tree* tree);
     @return The status of the function (return code)
 */
 FuncReturnCode NodeDtor(Node* node);
-
-/*!
-    @brief Function that counts nodes from the file
-    @return The number of the nodes
-*/
-size_t TreeNodesCount();
 
 /*!
     @brief Function that writes subtree in file

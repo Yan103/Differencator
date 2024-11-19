@@ -1,0 +1,27 @@
+digraph tree{
+    node[shape=record,fontsize=14];
+    splines=ortho
+    info[label="root=0x603000000160"]
+
+  	node0x603000000160[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 3"]
+	node0x603000000160->node0x603000000100
+	node0x603000000100[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
+	node0x603000000100->node0x603000000040
+	node0x603000000040[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 3"]
+	node0x603000000040[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 3"]
+	node0x603000000100[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
+	node0x603000000100->node0x603000000070
+	node0x603000000070[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 5"]
+	node0x603000000070[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 5"]
+	node0x603000000160[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 3"]
+	node0x603000000160->node0x603000000130
+	node0x603000000130[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 1"]
+	node0x603000000130->node0x6030000000a0
+	node0x6030000000a0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 9"]
+	node0x6030000000a0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 9"]
+	node0x603000000130[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 1"]
+	node0x603000000130->node0x6030000000d0
+	node0x6030000000d0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 2| value: -666"]
+	node0x6030000000d0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 2| value: -666"]
+
+}

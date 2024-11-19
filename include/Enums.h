@@ -22,4 +22,17 @@ enum NodeDataType {
     OP  = 3,
 };
 
+enum NodeOperatorCodes {
+    ADD = 0,
+    SUB = 1,
+    DIV = 2,
+    MUL = 3,
+    SIN = 4,
+    COS = 5,
+    TAN = 6,
+    COT = 7,
+    LOG = 8,
+    LN  = 9,
+};
+
 #endif // FUNCRETURNCODE_H
