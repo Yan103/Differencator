@@ -11,12 +11,43 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Default.h"
+#include "Tools.h"
 #include "BinaryTree.h"
-#include "Enums.h"
 
 /// @brief Type of items in a nodes' data
 typedef int NodeData;
+
+/// @brief Enum with return functions codes
+enum FuncReturnCode {
+    SUCCESS         =  0,
+    MEMORY_ERROR    = -1,
+    FILE_ERROR      = -2,
+    UNKNOWN_ERROR   = -3,
+    TREE_READ_ERROR = -4,
+    UNKNOWN_FLAG    = -5,
+};
+
+enum NodeDataType {
+    NUM   = 1,
+    VAR   = 2,
+    OP    = 3,
+    EQUAL = 4,
+};
+
+enum NodeOperatorCodes {
+    ADD  =  0,
+    SUB  =  1,
+    DIV  =  2,
+    MUL  =  3,
+    SIN  =  4,
+    COS  =  5,
+    TG   =  6,
+    CTG  =  7,
+    LOG  =  8,
+    LN   =  9,
+    SQRT = 10,
+    EXP  = 11,
+};
 
 /// @brief Structure tree node
 struct Node {

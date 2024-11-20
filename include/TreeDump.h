@@ -13,8 +13,7 @@
 #include <unistd.h>
 
 #include "BinaryTree.h"
-#include "Default.h"
-#include "Enums.h"
+#include "Tools.h"
 
 /// @brief Macro for the add new line in .dot file
 #define NEWDOTLINE(filename) fprintf(filename, "\n  ");

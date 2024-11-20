@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Default.h"
+#include "Tools.h"
 
 /*!
     @brief Function that, in case of an error, prints where it occurred and terminates the program

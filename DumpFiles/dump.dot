@@ -1,27 +1,39 @@
 digraph tree{
     node[shape=record,fontsize=14];
     splines=ortho
-    info[label="root=0x603000000160"]
+    info[label="root=0x603000000520"]
 
-  	node0x603000000160[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 3"]
-	node0x603000000160->node0x603000000100
-	node0x603000000100[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
-	node0x603000000100->node0x603000000040
-	node0x603000000040[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 3"]
-	node0x603000000040[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 3"]
-	node0x603000000100[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
-	node0x603000000100->node0x603000000070
-	node0x603000000070[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 5"]
-	node0x603000000070[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 5"]
-	node0x603000000160[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 3"]
-	node0x603000000160->node0x603000000130
-	node0x603000000130[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 1"]
-	node0x603000000130->node0x6030000000a0
-	node0x6030000000a0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 9"]
-	node0x6030000000a0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 9"]
-	node0x603000000130[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 1"]
-	node0x603000000130->node0x6030000000d0
-	node0x6030000000d0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 2| value: -666"]
-	node0x6030000000d0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 2| value: -666"]
+  	node0x603000000520[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
+	node0x603000000520->node0x6030000004f0
+	node0x6030000004f0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
+	node0x6030000004f0->node0x6030000004c0
+	node0x6030000004c0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 0"]
+	node0x6030000004c0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 0"]
+	node0x6030000004f0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
+	node0x6030000004f0->node0x603000000490
+	node0x603000000490[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 0"]
+	node0x603000000490[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 0"]
+	node0x603000000520[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
+	node0x603000000520->node0x603000000460
+	node0x603000000460[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
+	node0x603000000460->node0x603000000430
+	node0x603000000430[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 3"]
+	node0x603000000430->node0x603000000400
+	node0x603000000400[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 0"]
+	node0x603000000400[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 0"]
+	node0x603000000430[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 3"]
+	node0x603000000430->node0x6030000003d0
+	node0x6030000003d0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 2| value: -666"]
+	node0x6030000003d0[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 2| value: -666"]
+	node0x603000000460[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 0"]
+	node0x603000000460->node0x6030000003a0
+	node0x6030000003a0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 3"]
+	node0x6030000003a0->node0x603000000370
+	node0x603000000370[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 9"]
+	node0x603000000370[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 9"]
+	node0x6030000003a0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="type: 3| value: 3"]
+	node0x6030000003a0->node0x603000000340
+	node0x603000000340[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 1"]
+	node0x603000000340[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="type: 1| value: 1"]
 
 }
