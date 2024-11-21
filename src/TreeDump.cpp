@@ -16,6 +16,13 @@ const char* DOT_FILENAME            = "/home/yan/projects/Differencator/DumpFile
 /// @brief Constant for command busser size
 const int   COMMAND_BUFFER_CONSTANT = 500;
 
+const char* PLUS_CONST           = "+";
+const char* MINUS_CONST          = "-";
+const char* MULTIPLICATION_CONST = "*";
+const char* DIVISION_CONST       = "/";
+const char* POW_CONST            = "^";
+const char* ERROR_CONST          = "ERROR";
+
 /*!
     @brief Function that calls DUMP
     \param [out] tree   - pointer on tree
@@ -31,7 +38,7 @@ int TreeDump(Tree* tree, const char* func, int line, const char* title, ...) {
     if (!dot_file) {
         printf(RED("Error occured while opening input file!\n"));
 
-        return -1;
+        return (int)FILE_ERROR;
     }
 
     CreateDotBase(dot_file, tree);
@@ -44,7 +51,7 @@ int TreeDump(Tree* tree, const char* func, int line, const char* title, ...) {
     if (command == NULL) {
         printf(RED("MEMORY ERROR!\n"));
 
-        return -2;
+        return (int)MEMORY_ERROR;
     }
     fclose(dot_file);
 
@@ -56,7 +63,7 @@ int TreeDump(Tree* tree, const char* func, int line, const char* title, ...) {
         printf(RED("Something went wrong...\n"));
         FREE(command)
 
-        return -3;
+        return (int)SYSCALL_ERROR;
     }
     FREE(command);
 
@@ -110,6 +117,46 @@ FuncReturnCode CreateDotBase(FILE* filename, Tree* tree) {
     return SUCCESS;
 }
 
+static const char* GetOperation(NodeData data) {
+    switch (data) {
+        // TODO other operations
+        case ADD: return PLUS_CONST;
+        case SUB: return MINUS_CONST;
+        case MUL: return MULTIPLICATION_CONST;
+        case DIV: return DIVISION_CONST;
+        case POW: return POW_CONST;
+        default:  return ERROR_CONST;
+    }
+
+}
+
+static void CreateColourNodeByType(FILE* filename, Node* node) {
+    ASSERT(node     != NULL, "NULL POINTER WAS PASSED!\n");
+    ASSERT(filename != NULL, "NULL POINTER WAS PASSED!\n");
+
+    switch (node->type) {
+        case NUM: {
+            fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightblue\","
+                                "label=\"%d\"]\n", node, node->data);
+            break;
+        }
+        case VAR: {
+            fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightpink\","
+                                "label=\"x\"]\n", node);
+            break;
+        }
+        case  OP: {
+            fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightgreen\","
+                              "label=\"%s\"]\n", node, GetOperation(node->data));
+            break;
+        }
+        default: {
+            fprintf(stderr, RED("Something went wrong...\n"));
+            break;
+        }
+    }
+}
+
 /*!
     @brief Function that creates node in DUMP
     \param [in] filename - filename .dot file for DUMP
@@ -121,23 +168,19 @@ FuncReturnCode CreateDotNode(FILE* filename, Node* node) {
     ASSERT(filename != NULL, "NULL POINTER WAS PASSED!\n");
 
     if (node->left) {
-        fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightgreen\","
-                          "label=\"type: %d| value: %d\"]\n", node, node->type, node->data);
+        CreateColourNodeByType(filename, node);
         fprintf(filename, "\tnode%p->node%p\n", node, node->left);
         CreateDotNode(filename, node->left);
     } else {
-        fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightpink\","
-                          "label=\"type: %d| value: %d\"]\n", node, node->type, node->data);
+        CreateColourNodeByType(filename, node);
     }
 
     if (node->right) {
-        fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightgreen\","
-                          "label=\"type: %d| value: %d\"]\n", node, node->type, node->data);
+        CreateColourNodeByType(filename, node);
         fprintf(filename, "\tnode%p->node%p\n", node, node->right);
         CreateDotNode(filename, node->right);
     } else {
-        fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightpink\","
-                          "label=\"type: %d| value: %d\"]\n", node, node->type, node->data);
+        CreateColourNodeByType(filename, node);
     }
 
     return SUCCESS;

@@ -25,13 +25,13 @@ enum FuncReturnCode {
     UNKNOWN_ERROR   = -3,
     TREE_READ_ERROR = -4,
     UNKNOWN_FLAG    = -5,
+    SYSCALL_ERROR   = -6,
 };
 
 enum NodeDataType {
     NUM   = 1,
     VAR   = 2,
     OP    = 3,
-    EQUAL = 4,
 };
 
 enum NodeOperatorCodes {
@@ -47,6 +47,7 @@ enum NodeOperatorCodes {
     LN   =  9,
     SQRT = 10,
     EXP  = 11,
+    POW  = 12,
 };
 
 /// @brief Structure tree node
@@ -107,5 +108,9 @@ FuncReturnCode WriteSubTree(FILE* filename, Node* node);
     @return The status of the function (return code)
 */
 FuncReturnCode WriteTree(FILE* filename, Tree* tree);
+
+char* ReadNodeData(FILE* filename);
+
+Node* ReadSubTree(FILE* filename);
 
 #endif // BINARY_TREE_H

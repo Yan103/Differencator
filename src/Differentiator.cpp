@@ -10,6 +10,7 @@
 #define _SUB(LEFT, RIGHT) CreateNode(OP, SUB, LEFT, RIGHT)
 #define _MUL(LEFT, RIGHT) CreateNode(OP, MUL, LEFT, RIGHT)
 #define _DIV(LEFT, RIGHT) CreateNode(OP, DIV, LEFT, RIGHT)
+#define _POW(LEFT, RIGHT) CreateNode(OP, POW, LEFT, RIGHT)
 
 #define dL Differentiator(node->left)
 #define dR Differentiator(node->right)
@@ -33,6 +34,8 @@ Node* Differentiator(Node* node) {
             case MUL: return _ADD(_MUL(dL, cR), _MUL(cL, dR));
 
             case DIV: return _DIV(_SUB(_MUL(dL, cR), _MUL(cL, dR)), _MUL(cL, cR));
+
+            case POW: return _MUL(dL, _MUL(cR, _POW(cL, _SUB(cR, _NUM(1))))); // TODO 2^2 | 2^x | x^x situations
 
             default: fprintf(stderr, RED("UNKNOWN OPERATION!\n"));
         }
