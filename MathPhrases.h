@@ -12,4 +12,6 @@ const char* MATH_PHRASES[] = {
     "На прошлой лекции по математическому анализу было доказано:"
 };
 
+const int MATAN_PHRASES_COUNT = sizeof(MATH_PHRASES) / sizeof(MATH_PHRASES[0]);
+
 #endif // MATHPHRASES_H

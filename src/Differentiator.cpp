@@ -61,3 +61,35 @@ Node* SubTreeCopy(Node* node) {
 
     return copied_node;
 }
+
+TreeSimplifyCode TreeSimplify(Tree* tree) {
+    ASSERT(tree != NULL, "NULL POINTER WAS PASSED!\n");
+
+    return SubTreeSimplify(tree->root);
+}
+
+TreeSimplifyCode SubTreeSimplify(Node* node) {
+
+    if (!node) return TREE_SIMPLIFY_SUCCESS;
+
+    TreeSimplifyCode simpify_status = TREE_SIMPLIFY_SUCCESS;
+
+    int tree_changed_flag = 0;
+
+    do {
+        tree_changed_flag = 0;
+
+        simpify_status = SubTreeSimplifyConstants(node, &tree_changed_flag);
+        if (simpify_status != TREE_SIMPLIFY_SUCCESS) break;
+
+        /*simpify_status = SubTreeSimplify();
+        if (simpify_status != TREE_SIMPLIFY_SUCCESS) break;*/
+
+    } while (tree_changed_flag);
+
+    return simpify_status;
+}
+
+TreeSimplifyCode SubTreeSimplifyConstants(Node* node, int* tree_changed_flag) {
+    return TREE_SIMPLIFY_SUCCESS;
+}
