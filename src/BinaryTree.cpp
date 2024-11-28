@@ -121,47 +121,6 @@ static int SkipUntilFindSymbol(FILE* filename, int symbol, char find_symbol) {
     return symbol;
 }
 
-/*!
-    @brief Function that writes binary tree in the file
-    \param [in] filename - pointer on the file
-    \param [in]     tree - pointer on tree
-    @return The status of the function (return code)
-*/
-FuncReturnCode WriteTree(FILE* filename, Tree* tree) {
-    ASSERT(filename != NULL, "NULL POINTER WAS PASSED!\n");
-    ASSERT(tree     != NULL, "NULL POINTER WAS PASSED!\n");
-
-    WriteSubTree(filename, tree->root);
-
-    return SUCCESS;
-}
-
-/*!
-    @brief Function that writes subtree in file
-    \param [in] filename - pointer on the file
-    \param [in]     node - pointer on node
-    @return The status of the function (return code)
-*/
-FuncReturnCode WriteSubTree(FILE* filename, Node* node) {
-    ASSERT(filename != NULL, "NULL POINTER WAS PASSED!\n");
-
-    if (node == NULL) {
-        fprintf(filename, "* ");
-
-        return SUCCESS;
-    }
-
-    fprintf(filename, "{ ");
-
-    fprintf(filename, "\"%lg\" ", node->data);
-    WriteSubTree(filename, node->left);
-    WriteSubTree(filename, node->right);
-
-    fprintf(filename, "} ");
-
-    return SUCCESS;
-}
-
 int SubTreeHaveArgs(Node* node) {
     if (!node)             return 0;
     if (node->type == NUM) return 0;
@@ -170,8 +129,7 @@ int SubTreeHaveArgs(Node* node) {
     return SubTreeHaveArgs(node->left) + SubTreeHaveArgs(node->right);
 }
 
-//!
-Node* SyntaxError() {
+void SyntaxError() {
     printf("ERROR!\n");
     abort();
 }

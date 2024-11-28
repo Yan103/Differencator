@@ -5,7 +5,7 @@
 #include "Differentiator.h"
 #include "TreeDump.h"
 
-const char* INPUT_FILENAME = "/home/yan/projects/Differencator/Expressions/test1.txt";
+const char* INPUT_FILENAME = "../Differencator/Expressions/test1.txt";
 
 int main() {
     srand((unsigned int)time(NULL));

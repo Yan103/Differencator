@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 #include "BinaryTree.h"
 #include "Differentiator.h"
@@ -79,6 +80,8 @@ Tree* TreeDiff(Node* root) {
 
     Tree* diff_tree = TreeCtor(diff_root);
 
+    TreeSimplify(diff_tree); //!
+
     return diff_tree;
 }
 
@@ -119,5 +122,156 @@ TreeSimplifyCode SubTreeSimplify(Node* node) {
 }
 
 TreeSimplifyCode SubTreeSimplifyConstants(Node* node, int* tree_changed_flag) {
-    return TREE_SIMPLIFY_SUCCESS;
+    ASSERT(tree_changed_flag != NULL, "NULL POINTER WAS PASSED!\n"); //TODO checks
+
+    if (!node)             return TREE_SIMPLIFY_SUCCESS;
+    if (node->type == NUM) return TREE_SIMPLIFY_SUCCESS;
+    if (node->type == VAR) return TREE_SIMPLIFY_SUCCESS;
+
+    TreeSimplifyCode simpify_result = TREE_SIMPLIFY_SUCCESS;
+
+    simpify_result = SubTreeSimplifyConstants(node->left, tree_changed_flag);
+
+    simpify_result = SubTreeSimplifyConstants(node->right, tree_changed_flag);
+
+    if (node->type == UN_OP && node->right->type == NUM) {
+        SubTreeEvalUnOperation(node, node->right->data, &(node->data)); //TODO checks
+
+        node->type = NUM;
+        NodeDtor(node->right);
+        node->right = NULL;
+
+        *tree_changed_flag += 1;
+
+        return TREE_SIMPLIFY_SUCCESS;
+    }
+
+    if (node->type == BI_OP && node->right->type == NUM && node->left->type == NUM) { //TODO checks
+        SubTreeEvalBiOperation(node, node->left->data, node->right->data, &(node->data));
+
+        node->type = NUM;
+        NodeDtor(node->right);
+        NodeDtor(node->left);
+        node->right = NULL;
+        node->left = NULL;
+
+        *tree_changed_flag += 1;
+
+        return TREE_SIMPLIFY_SUCCESS;
+    }
+
+    return simpify_result;
+}
+
+FuncReturnCode SubTreeEvalUnOperation(Node* node, NodeData arg, NodeData* result) {
+    ASSERT(result != NULL, "NULL POINTER WAS PASSED!\n"); //TODO checks
+
+    switch ((int) node->data) {
+        case EXP:
+            *result = pow(EXPONENT, arg);
+            break;
+        case LN:
+            *result = log(arg);
+            break;
+        case SIN:
+            *result = sin(arg);
+            break;
+        case COS:
+            *result = cos(arg);
+            break;
+        case TG:
+            *result = tan(arg);
+            break;
+        case CTG:
+            *result = 1 / tan(arg);
+            break;
+        case SH:
+            *result = sinh(arg);
+            break;
+        case CH:
+            *result = cosh(arg);
+            break;
+        case TH:
+            *result = tanh(arg);
+            break;
+        case CTH:
+            *result = 1 / tanh(arg);
+            break;
+        case ASIN:
+            *result = asin(arg);
+            break;
+        case ACOS:
+            *result = acos(arg);
+            break;
+        case ATG:
+            *result = atan(arg);
+            break;
+        case ACTG:
+            *result = PI / 2 - atan(arg);
+            break;
+        default:
+            fprintf(stderr, "Something went wrong...\n");
+            return UNKNOWN_ERROR;
+    }
+
+    return SUCCESS;
+}
+
+FuncReturnCode SubTreeEvalBiOperation(Node* node, NodeData left_arg, NodeData right_arg, NodeData* result) {
+    ASSERT(result != NULL, "NULL POINTER WAS PASSED!\n"); //TODO checks
+
+    switch ((int) node->data) {
+        case ADD:
+            *result = left_arg + right_arg;
+            break;
+        case SUB:
+            *result = left_arg - right_arg;
+            break;
+        case MUL:
+            *result = left_arg * right_arg;
+            break;
+        case DIV:
+            *result = left_arg / right_arg;
+            break;
+        case POW:
+            *result = pow(left_arg, right_arg);
+            break;
+        default:
+            fprintf(stderr, "Something went wrong...\n");
+            return UNKNOWN_ERROR;
+    }
+
+    return SUCCESS;
+}
+
+TreeSimplifyCode SubTreeSimplifyTrivialCases(Node* node, int* tree_changed_flag) {
+    ASSERT(tree_changed_flag != NULL, "NULL POINTER WAS PASSED!\n"); //TODO checks
+
+    if (!node)             return TREE_SIMPLIFY_SUCCESS;
+    if (node->type == NUM) return TREE_SIMPLIFY_SUCCESS;
+    if (node->type == VAR) return TREE_SIMPLIFY_SUCCESS;
+
+    TreeSimplifyCode simpify_result = TREE_SIMPLIFY_SUCCESS;
+
+    simpify_result = SubTreeSimplifyTrivialCases(node->left, tree_changed_flag);
+
+    simpify_result = SubTreeSimplifyTrivialCases(node->right, tree_changed_flag);
+
+    switch ((int) node->data) {
+        case ADD:
+
+        case SUB:
+
+        case MUL:
+
+        case DIV:
+
+        case POW:
+
+        default:
+            fprintf(stderr, "The program does not know such a simplification...\n");
+            break;
+    }
+
+    return simpify_result;
 }

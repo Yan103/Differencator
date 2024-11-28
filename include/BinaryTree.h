@@ -33,7 +33,6 @@ enum FuncReturnCode {
 struct Node {
     NodeDataType type;
     NodeData     data;
-
     Node*        left;
     Node*       right;
 };
@@ -77,22 +76,6 @@ FuncReturnCode TreeDtor(Tree* tree);
 */
 FuncReturnCode NodeDtor(Node* node);
 
-/*!
-    @brief Function that writes subtree in file
-    \param [in] filename - pointer on the file
-    \param [in]     node - pointer on node
-    @return The status of the function (return code)
-*/
-FuncReturnCode WriteSubTree(FILE* filename, Node* node);
-
-/*!
-    @brief Function that writes binary tree in the file
-    \param [in] filename - pointer on the file
-    \param [in]     tree - pointer on tree
-    @return The status of the function (return code)
-*/
-FuncReturnCode WriteTree(FILE* filename, Tree* tree);
-
 int SubTreeHaveArgs(Node* node);
 
 Node* GetP(ReadString* rs);
@@ -101,7 +84,7 @@ Node* GetG(ReadString* rs);
 Node* GetN(ReadString* rs);
 Node* GetT(ReadString* rs);
 Node* GetB(ReadString* rs);
-Node* SyntaxError();
+void SyntaxError() __attribute__ ((noreturn)); //! Ask Yarik what is it
 
 //ReadString* ReadExpFromFile(const char* filename);
 

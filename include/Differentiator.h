@@ -26,6 +26,9 @@
 #define cL SubTreeCopy(node->left)
 #define cR SubTreeCopy(node->right)
 
+const double EXPONENT = 2.718281828459045;
+const double PI       = 3.141592653589793;
+
 enum TreeSimplifyCode {
     TREE_SIMPLIFY_SUCCESS =  0,
     TREE_SIMPLIFY_ERROR   = -1,
@@ -42,5 +45,11 @@ TreeSimplifyCode TreeSimplify(Tree* tree);
 TreeSimplifyCode SubTreeSimplify(Node* node);
 
 TreeSimplifyCode SubTreeSimplifyConstants(Node* node, int* tree_changed_flag);
+
+FuncReturnCode SubTreeEvalUnOperation(Node* node, NodeData arg, NodeData* result);
+
+FuncReturnCode SubTreeEvalBiOperation(Node* node, NodeData left_arg, NodeData right_arg, NodeData* result);
+
+TreeSimplifyCode SubTreeSimplifyTrivialCases(Node* node, int* tree_changed_flag);
 
 #endif // DIFFERENCATOR_H

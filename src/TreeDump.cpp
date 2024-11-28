@@ -8,34 +8,35 @@
 #include "TreeDump.h"
 
 /// @brief Constant for LOG filename
-const char* LOG_FILENAME            = "/home/yan/projects/Differencator/DumpFiles/log.html";
+const char* LOG_FILENAME            = "../Differencator/DumpFiles/log.html";
 
 /// @brief Constant for DOT filename
-const char* DOT_FILENAME            = "/home/yan/projects/Differencator/DumpFiles/dump.dot";
+const char* DOT_FILENAME            = "../Differencator/DumpFiles/dump.dot";
 
 /// @brief Constant for command busser size
 const int   COMMAND_BUFFER_CONSTANT = 500;
 
+// TODO: UBERI THIS CRIIIIINGEEE !!!!
 const char* PLUS_CONST           = "+";
 const char* MINUS_CONST          = "-";
 const char* MULTIPLICATION_CONST = "*";
 const char* DIVISION_CONST       = "/";
 const char* POW_CONST            = "^";
-const char* EXP_CONST           = "e";
-const char* LN_CONST           = "ln";
+const char* EXP_CONST            = "e";
+const char* LN_CONST             = "ln";
 const char* SQRT_CONST           = "√";
-const char* SIN_CONST           = "sin";
-const char* COS_CONST           = "cos";
-const char* TG_CONST           = "tg";
-const char* CTG_CONST           = "ctg";
+const char* SIN_CONST            = "sin";
+const char* COS_CONST            = "cos";
+const char* TG_CONST             = "tg";
+const char* CTG_CONST            = "ctg";
 const char* ASIN_CONST           = "arcsin";
 const char* ACOS_CONST           = "arccos";
-const char* ATG_CONST           = "arctg";
+const char* ATG_CONST            = "arctg";
 const char* ACTG_CONST           = "arcctg";
-const char* SH_CONST           = "sh";
-const char* CH_CONST           = "ch";
-const char* TH_CONST           = "th";
-const char* CTH_CONST           = "cth";
+const char* SH_CONST             = "sh";
+const char* CH_CONST             = "ch";
+const char* TH_CONST             = "th";
+const char* CTH_CONST            = "cth";
 const char* ERROR_CONST          = "ERROR";
 
 /*!
