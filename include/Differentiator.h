@@ -6,6 +6,26 @@
 #include "BinaryTree.h"
 #include "Operations.h"
 
+#define _NUM(num)         CreateNode(NUM, num, NULL, NULL)
+#define _ADD(LEFT, RIGHT) CreateNode(BI_OP, ADD, LEFT, RIGHT)
+#define _SUB(LEFT, RIGHT) CreateNode(BI_OP, SUB, LEFT, RIGHT)
+#define _MUL(LEFT, RIGHT) CreateNode(BI_OP, MUL, LEFT, RIGHT)
+#define _DIV(LEFT, RIGHT) CreateNode(BI_OP, DIV, LEFT, RIGHT)
+#define _POW(LEFT, RIGHT) CreateNode(BI_OP, POW, LEFT, RIGHT)
+
+#define _SIN(RIGHT)       CreateNode(UN_OP, SIN, NULL, RIGHT)
+#define _COS(RIGHT)       CreateNode(UN_OP, COS, NULL, RIGHT)
+#define _EXP(RIGHT)       CreateNode(UN_OP, EXP, NULL, RIGHT)
+#define  _LN(RIGHT)       CreateNode(UN_OP,  LN, NULL, RIGHT)
+#define  _SH(RIGHT)       CreateNode(UN_OP,  SH, NULL, RIGHT)
+#define  _CH(RIGHT)       CreateNode(UN_OP,  CH, NULL, RIGHT)
+
+#define dL Differentiator(node->left)
+#define dR Differentiator(node->right)
+
+#define cL SubTreeCopy(node->left)
+#define cR SubTreeCopy(node->right)
+
 enum TreeSimplifyCode {
     TREE_SIMPLIFY_SUCCESS =  0,
     TREE_SIMPLIFY_ERROR   = -1,

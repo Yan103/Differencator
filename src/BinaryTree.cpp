@@ -162,6 +162,14 @@ FuncReturnCode WriteSubTree(FILE* filename, Node* node) {
     return SUCCESS;
 }
 
+int SubTreeHaveArgs(Node* node) {
+    if (!node)             return 0;
+    if (node->type == NUM) return 0;
+    if (node->type == VAR) return 1;
+
+    return SubTreeHaveArgs(node->left) + SubTreeHaveArgs(node->right);
+}
+
 //!
 Node* SyntaxError() {
     printf("ERROR!\n");

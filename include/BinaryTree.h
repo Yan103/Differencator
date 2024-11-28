@@ -16,7 +16,7 @@
 #include "Operations.h"
 
 /// @brief Type of items in a nodes' data
-typedef int NodeData;
+typedef double NodeData;
 
 /// @brief Enum with return functions codes
 enum FuncReturnCode {
@@ -33,7 +33,7 @@ enum FuncReturnCode {
 struct Node {
     NodeDataType type;
     NodeData     data;
-    
+
     Node*        left;
     Node*       right;
 };
@@ -93,6 +93,7 @@ FuncReturnCode WriteSubTree(FILE* filename, Node* node);
 */
 FuncReturnCode WriteTree(FILE* filename, Tree* tree);
 
+int SubTreeHaveArgs(Node* node);
 
 Node* GetP(ReadString* rs);
 Node* GetE(ReadString* rs);

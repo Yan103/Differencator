@@ -5,19 +5,6 @@
 #include "Tools.h"
 #include "TreeDump.h"
 
-#define _NUM(num)         CreateNode(NUM, num, NULL, NULL)
-#define _ADD(LEFT, RIGHT) CreateNode(BI_OP, ADD, LEFT, RIGHT)
-#define _SUB(LEFT, RIGHT) CreateNode(BI_OP, SUB, LEFT, RIGHT)
-#define _MUL(LEFT, RIGHT) CreateNode(BI_OP, MUL, LEFT, RIGHT)
-#define _DIV(LEFT, RIGHT) CreateNode(BI_OP, DIV, LEFT, RIGHT)
-#define _POW(LEFT, RIGHT) CreateNode(BI_OP, POW, LEFT, RIGHT)
-
-#define dL Differentiator(node->left)
-#define dR Differentiator(node->right)
-
-#define cL SubTreeCopy(node->left)
-#define cR SubTreeCopy(node->right)
-
 Node* Differentiator(Node* node) {
     // TODO checks
 
@@ -25,19 +12,62 @@ Node* Differentiator(Node* node) {
 
     if (node->type == VAR) return _NUM(1);
 
-    if (node->type == BI_OP or node->type == UN_OP) {
-        switch (node->data) {
-            case ADD: return _ADD(dL, dR);
+    ////            case POW: return _MUL(dL, _MUL(cR, _POW(cL, _SUB(cR, _NUM(1))))); // TODO 2^2 | 2^x | x^x situations
 
-            case SUB: return _SUB(dL, dR);
+    switch ((int) node->data) {
+        case  ADD: return _ADD(dL, dR);
 
-            case MUL: return _ADD(_MUL(dL, cR), _MUL(cL, dR));
+        case  SUB: return _SUB(dL, dR);
 
-            case DIV: return _DIV(_SUB(_MUL(dL, cR), _MUL(cL, dR)), _MUL(cL, cR));
+        case  MUL: return _ADD(_MUL(dL, cR), _MUL(cL, dR));
 
-            case POW: return _MUL(dL, _MUL(cR, _POW(cL, _SUB(cR, _NUM(1))))); // TODO 2^2 | 2^x | x^x situations
+        case  DIV: return _DIV(_SUB(_MUL(dL, cR), _MUL(cL, dR)), _MUL(cL, cR));
 
-            default: fprintf(stderr, RED("UNKNOWN OPERATION!\n"));
+        case  SIN: return _MUL(dR, _COS(cR));
+
+        case  COS: return _MUL(dR, _SUB(_NUM(0), _SIN(cR)));
+
+        case   TG: return _MUL(dR, _DIV(_NUM(1), _POW(_COS(cR), _NUM(2))));
+
+        case  CTG: return _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SIN(cR), _NUM(2)))));
+
+        case  EXP: return _MUL(dR, _EXP(cR));
+
+        case   SH: return _MUL(dR, _CH(cR));
+
+        case   CH: return _MUL(dR, _SH(cR));
+
+        case   TH: return _MUL(dR, _DIV(_NUM(1), _POW(_CH(cR), _NUM(2))));
+
+        case  CTH: return _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SH(cR), _NUM(2)))));
+
+        case ASIN: return _MUL(dR, _DIV(_NUM(1), _POW(_SUB(_NUM(1), _POW(cR, _NUM(2))), _NUM(0.5))));
+
+        case ACOS: return _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SUB(_NUM(1), _POW(cR, _NUM(2))), _NUM(0.5)))));
+
+        case  ATG: return _MUL(dR, _DIV(_NUM(1), _ADD(_NUM(1), _POW(cR, _NUM(2)))));
+
+        case ACTG: return _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _ADD(_NUM(1), _POW(cR, _NUM(2))))));
+
+        case   LN: return _MUL(dR, _DIV(_NUM(1), cR));
+
+        case SQRT: return _MUL(dR, _DIV(_NUM(1), _MUL(_NUM(2), _POW(cR, _NUM(0.5)))));
+
+        case  POW: { // TODO check it in tests (mb tut est' oshibki...)
+            if        (!SubTreeHaveArgs(node->left) && !SubTreeHaveArgs(node->right)) {  //* const^const
+                return _NUM(0);
+            } else if (!SubTreeHaveArgs(node->left) &&  SubTreeHaveArgs(node->right)) {  //* const^variable
+                return _MUL(dR, _MUL(_POW(cL, cR), _LN(cL)));
+            } else if ( SubTreeHaveArgs(node->left) && !SubTreeHaveArgs(node->right)) {  //* variable^const
+                return _MUL(dL, _MUL(cR, _POW(cL, _SUB(cR, _NUM(1)))));
+            } else {                                                                     //* variable^variable
+                return _MUL(_ADD(_MUL(dR, _LN(cL)), _DIV(_MUL(dL, cR), cL)), _POW(cL, cR));
+            }
+        }
+
+        default: {
+            fprintf(stderr, RED("Unknown operation %d!\n"), (int) node->data);
+            break;
         }
     }
 
