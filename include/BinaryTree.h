@@ -64,6 +64,11 @@ struct Tree {
     size_t   size;
 };
 
+struct ReadString {
+    const char* s;
+    int     p = 0;
+};
+
 /*!
     @brief Function that creates binary tree
     \param [out] root - pointer on tree root
@@ -109,8 +114,15 @@ FuncReturnCode WriteSubTree(FILE* filename, Node* node);
 */
 FuncReturnCode WriteTree(FILE* filename, Tree* tree);
 
-char* ReadNodeData(FILE* filename);
 
-Node* ReadSubTree(FILE* filename);
+Node* GetP(ReadString* rs);
+Node* GetE(ReadString* rs);
+Node* GetG(ReadString* rs);
+Node* GetN(ReadString* rs);
+Node* GetT(ReadString* rs);
+Node* GetB(ReadString* rs);
+Node* SyntaxError();
+
+//ReadString* ReadExpFromFile(const char* filename);
 
 #endif // BINARY_TREE_H

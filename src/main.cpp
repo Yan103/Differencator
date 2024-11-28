@@ -5,15 +5,20 @@
 #include "Differentiator.h"
 #include "TreeDump.h"
 
+const char* INPUT_FILENAME = "/home/yan/projects/Differencator/Expressions/test1.txt";
+
 int main() {
     srand((unsigned int)time(NULL));
 
-    Node* node1 = CreateNode(VAR, -666, NULL, NULL);
+    /*Node* node1 = CreateNode(VAR, -666, NULL, NULL);
     Node* node11 = CreateNode(NUM, 3, NULL, NULL);
     Node* node2 = CreateNode(NUM, 3, NULL, NULL);
 
-    Node* node = CreateNode(OP, POW, node1, node11);
-    Node* root = CreateNode(OP, MUL, node2, node);
+    Node* node = CreateNode(OP, POW, node1, node11);*/
+
+    ReadString rs = {.s = "25+25^2-3*10$", .p = 0};
+    //ReadString* rs = ReadExpFromFile(INPUT_FILENAME);
+    Node* root = GetG(&rs);
 
     Tree* tree = TreeCtor(root);
 
