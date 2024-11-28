@@ -145,7 +145,8 @@ static void CreateColourNodeByType(FILE* filename, Node* node) {
                                 "label=\"x\"]\n", node);
             break;
         }
-        case  OP: {
+        case BI_OP:
+        case UN_OP: {
             fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightgreen\","
                               "label=\"%s\"]\n", node, GetOperation(node->data));
             break;
@@ -204,7 +205,6 @@ FuncReturnCode MakeHTMLDump(FILE* html_file, Tree* tree, int dump_id, const char
 
     fprintf(html_file, "DUMPED %d-%02d-%02d %02d:%02d:%02d from function %s, %d line \n    ",
             tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, func, line);
-    fprintf(html_file, "Tree size: %lu nodes\n", tree->size);
 
     fprintf(html_file, "\t<img src=dump%d.png>", dump_id);
 

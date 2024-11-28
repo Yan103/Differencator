@@ -13,6 +13,7 @@
 
 #include "Tools.h"
 #include "BinaryTree.h"
+#include "Operations.h"
 
 /// @brief Type of items in a nodes' data
 typedef int NodeData;
@@ -28,32 +29,11 @@ enum FuncReturnCode {
     SYSCALL_ERROR         = -6,
 };
 
-enum NodeDataType {
-    NUM   = 1,
-    VAR   = 2,
-    OP    = 3,
-};
-
-enum NodeOperatorCodes {
-    ADD  =  0,
-    SUB  =  1,
-    DIV  =  2,
-    MUL  =  3,
-    SIN  =  4,
-    COS  =  5,
-    TG   =  6,
-    CTG  =  7,
-    LOG  =  8,
-    LN   =  9,
-    SQRT = 10,
-    EXP  = 11,
-    POW  = 12,
-};
-
 /// @brief Structure tree node
 struct Node {
     NodeDataType type;
     NodeData     data;
+    
     Node*        left;
     Node*       right;
 };
@@ -61,7 +41,6 @@ struct Node {
 /// @brief Structure binary tree
 struct Tree {
     Node*    root;
-    size_t   size;
 };
 
 struct ReadString {

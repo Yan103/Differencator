@@ -28,7 +28,6 @@ Tree* TreeCtor(Node* root) {
     }
 
     tree->root = root;
-    tree->size = 1;
 
     return tree;
 }
@@ -186,9 +185,9 @@ Node* GetE(ReadString* rs) {
         rs->p++;
         Node* val2 = GetT(rs);
         if (op == '+') {
-            val = CreateNode(OP, ADD, val, val2);
+            val = CreateNode(BI_OP, ADD, val, val2);
         } else {
-            val = CreateNode(OP, SUB, val, val2);
+            val = CreateNode(BI_OP, SUB, val, val2);
         }
     }
     return val;
@@ -201,9 +200,9 @@ Node* GetT(ReadString* rs) {
         rs->p++;
         Node* val2 = GetP(rs);
         if (op == '*') {
-            val = CreateNode(OP, MUL, val, val2);
+            val = CreateNode(BI_OP, MUL, val, val2);
         } else {
-            val = CreateNode(OP, DIV, val, val2);
+            val = CreateNode(BI_OP, DIV, val, val2);
         }
     }
     return val;
@@ -214,7 +213,7 @@ Node* GetP(ReadString* rs) {
     while (rs->s[rs->p] == '^') {
         rs->p++;
         Node* val2 = GetB(rs);
-        val = CreateNode(OP, POW, val, val2);
+        val = CreateNode(BI_OP, POW, val, val2);
     }
     return val;
 }

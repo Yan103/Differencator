@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "BinaryTree.h"
+#include "Operations.h"
 
 enum TreeSimplifyCode {
     TREE_SIMPLIFY_SUCCESS =  0,

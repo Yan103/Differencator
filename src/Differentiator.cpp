@@ -6,11 +6,11 @@
 #include "TreeDump.h"
 
 #define _NUM(num)         CreateNode(NUM, num, NULL, NULL)
-#define _ADD(LEFT, RIGHT) CreateNode(OP, ADD, LEFT, RIGHT)
-#define _SUB(LEFT, RIGHT) CreateNode(OP, SUB, LEFT, RIGHT)
-#define _MUL(LEFT, RIGHT) CreateNode(OP, MUL, LEFT, RIGHT)
-#define _DIV(LEFT, RIGHT) CreateNode(OP, DIV, LEFT, RIGHT)
-#define _POW(LEFT, RIGHT) CreateNode(OP, POW, LEFT, RIGHT)
+#define _ADD(LEFT, RIGHT) CreateNode(BI_OP, ADD, LEFT, RIGHT)
+#define _SUB(LEFT, RIGHT) CreateNode(BI_OP, SUB, LEFT, RIGHT)
+#define _MUL(LEFT, RIGHT) CreateNode(BI_OP, MUL, LEFT, RIGHT)
+#define _DIV(LEFT, RIGHT) CreateNode(BI_OP, DIV, LEFT, RIGHT)
+#define _POW(LEFT, RIGHT) CreateNode(BI_OP, POW, LEFT, RIGHT)
 
 #define dL Differentiator(node->left)
 #define dR Differentiator(node->right)
@@ -25,7 +25,7 @@ Node* Differentiator(Node* node) {
 
     if (node->type == VAR) return _NUM(1);
 
-    if (node->type == OP) {
+    if (node->type == BI_OP or node->type == UN_OP) {
         switch (node->data) {
             case ADD: return _ADD(dL, dR);
 
