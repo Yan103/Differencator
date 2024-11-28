@@ -21,6 +21,21 @@ const char* MINUS_CONST          = "-";
 const char* MULTIPLICATION_CONST = "*";
 const char* DIVISION_CONST       = "/";
 const char* POW_CONST            = "^";
+const char* EXP_CONST           = "e";
+const char* LN_CONST           = "ln";
+const char* SQRT_CONST           = "√";
+const char* SIN_CONST           = "sin";
+const char* COS_CONST           = "cos";
+const char* TG_CONST           = "tg";
+const char* CTG_CONST           = "ctg";
+const char* ASIN_CONST           = "arcsin";
+const char* ACOS_CONST           = "arccos";
+const char* ATG_CONST           = "arctg";
+const char* ACTG_CONST           = "arcctg";
+const char* SH_CONST           = "sh";
+const char* CH_CONST           = "ch";
+const char* TH_CONST           = "th";
+const char* CTH_CONST           = "cth";
 const char* ERROR_CONST          = "ERROR";
 
 /*!
@@ -118,14 +133,29 @@ FuncReturnCode CreateDotBase(FILE* filename, Tree* tree) {
 }
 
 static const char* GetOperation(NodeData data) {
-    switch (data) {
+    switch ((int)data) {
         // TODO other operations
-        case ADD: return PLUS_CONST;
-        case SUB: return MINUS_CONST;
-        case MUL: return MULTIPLICATION_CONST;
-        case DIV: return DIVISION_CONST;
-        case POW: return POW_CONST;
-        default:  return ERROR_CONST;
+        case ADD:  return PLUS_CONST;
+        case SUB:  return MINUS_CONST;
+        case MUL:  return MULTIPLICATION_CONST;
+        case DIV:  return DIVISION_CONST;
+        case POW:  return POW_CONST;
+        case SIN:  return SIN_CONST;
+        case COS:  return COS_CONST;
+        case TG:   return TG_CONST;
+        case CTG:  return CTG_CONST;
+        case LN:   return LN_CONST;
+        case SQRT: return SQRT_CONST;
+        case EXP:  return EXP_CONST;
+        case ASIN: return ASIN_CONST;
+        case ACOS: return ACOS_CONST;
+        case ATG:  return ATG_CONST;
+        case ACTG: return ACTG_CONST;
+        case SH:   return SH_CONST;
+        case CH:   return CH_CONST;
+        case TH:   return TH_CONST;
+        case CTH:  return CTH_CONST;
+        default:   return ERROR_CONST;
     }
 
 }
@@ -137,7 +167,7 @@ static void CreateColourNodeByType(FILE* filename, Node* node) {
     switch (node->type) {
         case NUM: {
             fprintf(filename, "\tnode%p[shape=Mrecord,style=\"rounded,filled\",fillcolor=\"lightblue\","
-                                "label=\"%d\"]\n", node, node->data);
+                                "label=\"%lg\"]\n", node, node->data);
             break;
         }
         case VAR: {

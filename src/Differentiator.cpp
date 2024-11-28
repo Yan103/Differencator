@@ -12,8 +12,6 @@ Node* Differentiator(Node* node) {
 
     if (node->type == VAR) return _NUM(1);
 
-    ////            case POW: return _MUL(dL, _MUL(cR, _POW(cL, _SUB(cR, _NUM(1))))); // TODO 2^2 | 2^x | x^x situations
-
     switch ((int) node->data) {
         case  ADD: return _ADD(dL, dR);
 

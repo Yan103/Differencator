@@ -153,7 +153,7 @@ FuncReturnCode WriteSubTree(FILE* filename, Node* node) {
 
     fprintf(filename, "{ ");
 
-    fprintf(filename, "\"%d\" ", node->data);
+    fprintf(filename, "\"%lg\" ", node->data);
     WriteSubTree(filename, node->left);
     WriteSubTree(filename, node->right);
 
