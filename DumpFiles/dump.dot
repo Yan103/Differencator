@@ -1,9 +1,27 @@
 digraph tree{
     node[shape=record,fontsize=14];
     splines=ortho
-    info[label="root=0x603000000580"]
+    info[label="root=0x6030000005e0"]
 
-  	node0x603000000580[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="0"]
-	node0x603000000580[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="0"]
+  	node0x6030000005e0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="*"]
+	node0x6030000005e0->node0x603000000490
+	node0x603000000490[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="3"]
+	node0x603000000490[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="3"]
+	node0x6030000005e0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="*"]
+	node0x6030000005e0->node0x603000000460
+	node0x603000000460[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="*"]
+	node0x603000000460->node0x6030000003d0
+	node0x6030000003d0[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="3"]
+	node0x6030000003d0[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="3"]
+	node0x603000000460[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="*"]
+	node0x603000000460->node0x6030000003a0
+	node0x6030000003a0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="^"]
+	node0x6030000003a0->node0x603000000370
+	node0x603000000370[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="x"]
+	node0x603000000370[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="x"]
+	node0x6030000003a0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="^"]
+	node0x6030000003a0->node0x603000000340
+	node0x603000000340[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="2"]
+	node0x603000000340[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="2"]
 
 }

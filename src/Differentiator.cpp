@@ -80,7 +80,7 @@ Tree* TreeDiff(Node* root) {
 
     Tree* diff_tree = TreeCtor(diff_root);
 
-    TreeSimplify(diff_tree); //!
+    TreeSimplify(diff_tree);
 
     return diff_tree;
 }
@@ -113,8 +113,8 @@ TreeSimplifyCode SubTreeSimplify(Node* node) {
         simpify_status = SubTreeSimplifyConstants(node, &tree_changed_flag);
         if (simpify_status != TREE_SIMPLIFY_SUCCESS) break;
 
-        /*simpify_status = SubTreeSimplify();
-        if (simpify_status != TREE_SIMPLIFY_SUCCESS) break;*/
+        simpify_status = SubTreeSimplifyTrivialCases(node, &tree_changed_flag);
+        if (simpify_status != TREE_SIMPLIFY_SUCCESS) break;
 
     } while (tree_changed_flag);
 
@@ -138,7 +138,7 @@ TreeSimplifyCode SubTreeSimplifyConstants(Node* node, int* tree_changed_flag) {
         SubTreeEvalUnOperation(node, node->right->data, &(node->data)); //TODO checks
 
         node->type = NUM;
-        NodeDtor(node->right);
+        TreeNodeDtor(node->right);
         node->right = NULL;
 
         *tree_changed_flag += 1;
@@ -149,11 +149,11 @@ TreeSimplifyCode SubTreeSimplifyConstants(Node* node, int* tree_changed_flag) {
     if (node->type == BI_OP && node->right->type == NUM && node->left->type == NUM) { //TODO checks
         SubTreeEvalBiOperation(node, node->left->data, node->right->data, &(node->data));
 
-        node->type = NUM;
-        NodeDtor(node->right);
-        NodeDtor(node->left);
+        node->type  = NUM;
+        TreeNodeDtor(node->right);
+        TreeNodeDtor(node->left);
         node->right = NULL;
-        node->left = NULL;
+        node->left  = NULL;
 
         *tree_changed_flag += 1;
 
@@ -253,20 +253,74 @@ TreeSimplifyCode SubTreeSimplifyTrivialCases(Node* node, int* tree_changed_flag)
 
     TreeSimplifyCode simpify_result = TREE_SIMPLIFY_SUCCESS;
 
-    simpify_result = SubTreeSimplifyTrivialCases(node->left, tree_changed_flag);
+    if (node->left)  simpify_result = SubTreeSimplifyTrivialCases(node->left,  tree_changed_flag);
 
-    simpify_result = SubTreeSimplifyTrivialCases(node->right, tree_changed_flag);
+    if (node->right) simpify_result = SubTreeSimplifyTrivialCases(node->right, tree_changed_flag);
 
     switch ((int) node->data) {
         case ADD:
+            if (node->left->type == NUM && IS_ZERO(node->left->data)) {
+                ConnectChildWithParent(node, RIGHT);
+
+                *tree_changed_flag = 1;
+            } else if (node->right->type == NUM && IS_ZERO(node->right->data)) {
+                ConnectChildWithParent(node, LEFT);
+
+                *tree_changed_flag = 1;
+            }
+
+            break;
 
         case SUB:
+            if (node->right->type == NUM && IS_ZERO(node->right->data)) {
+                ConnectChildWithParent(node, LEFT);
+
+                *tree_changed_flag = 1;
+            }
+
+            break;
 
         case MUL:
+            if (node->left->type == NUM && IS_ONE(node->left->data)) {
+                ConnectChildWithParent(node, RIGHT);
+
+                *tree_changed_flag = 1;
+            } else if (node->right->type == NUM && IS_ONE(node->right->data)) {
+                ConnectChildWithParent(node, LEFT);
+
+                *tree_changed_flag = 1;
+            } else if (node->left->type == NUM && IS_ZERO(node->left->data)) {
+                SubTreeToNum(node, 0);
+
+                *tree_changed_flag = 1;
+            } else if (node->right->type == NUM && IS_ZERO(node->right->data)) {
+                SubTreeToNum(node, 0);
+
+                *tree_changed_flag = 1;
+            }
+
+            break;
 
         case DIV:
+            if (node->left->type == NUM && IS_ZERO(node->left->data)) {
+                SubTreeToNum(node, 0);
+
+                *tree_changed_flag = 1;
+            }
+
+            break;
 
         case POW:
+            if (node->right->type == NUM && IS_ZERO(node->right->data)) {
+                SubTreeToNum(node, 1);
+
+                *tree_changed_flag = 1;
+            } else if (node->right->type == NUM && IS_ONE(node->right->data)) {
+                ConnectChildWithParent(node, LEFT);
+
+                *tree_changed_flag = 1;
+            }
+            break;
 
         default:
             fprintf(stderr, "The program does not know such a simplification...\n");

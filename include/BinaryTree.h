@@ -29,6 +29,11 @@ enum FuncReturnCode {
     SYSCALL_ERROR         = -6,
 };
 
+enum NodeLocation {
+    LEFT  = 0,
+    RIGHT = 1,
+};
+
 /// @brief Structure tree node
 struct Node {
     NodeDataType type;
@@ -74,9 +79,13 @@ FuncReturnCode TreeDtor(Tree* tree);
     \param [out] node - pointer on node
     @return The status of the function (return code)
 */
-FuncReturnCode NodeDtor(Node* node);
+FuncReturnCode SubTreeDtor(Node* node);
+
+FuncReturnCode TreeNodeDtor(Node* node);
 
 int SubTreeHaveArgs(Node* node);
+
+FuncReturnCode SubTreeToNum(Node* node, NodeData value);
 
 Node* GetP(ReadString* rs);
 Node* GetE(ReadString* rs);
@@ -84,7 +93,10 @@ Node* GetG(ReadString* rs);
 Node* GetN(ReadString* rs);
 Node* GetT(ReadString* rs);
 Node* GetB(ReadString* rs);
-void SyntaxError() __attribute__ ((noreturn)); //! Ask Yarik what is it
+
+void SyntaxError() __attribute__ ((noreturn));
+
+FuncReturnCode ConnectChildWithParent(Node* node, NodeLocation location);
 
 //ReadString* ReadExpFromFile(const char* filename);
 

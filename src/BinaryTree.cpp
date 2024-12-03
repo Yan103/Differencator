@@ -58,15 +58,15 @@ Node* CreateNode(NodeDataType type, NodeData value, Node* left, Node* right) {
     \param [out] node - pointer on node
     @return The status of the function (return code)
 */
-FuncReturnCode NodeDtor(Node* node) {
+FuncReturnCode SubTreeDtor(Node* node) {
     ASSERT(node != NULL, "NULL POINTER WAS PASSED!\n");
 
     if (node->left) {
-        NodeDtor(node->left);
+        SubTreeDtor(node->left);
     }
 
     if (node->right) {
-        NodeDtor(node->right);
+        SubTreeDtor(node->right);
     }
 
     FREE(node);
@@ -82,8 +82,15 @@ FuncReturnCode NodeDtor(Node* node) {
 FuncReturnCode TreeDtor(Tree* tree) {
     ASSERT(tree != NULL, "NULL POINTER WAS PASSED!\n");
 
-    NodeDtor(tree->root);
+    SubTreeDtor(tree->root);
     FREE(tree);
+
+    return SUCCESS;
+}
+
+FuncReturnCode TreeNodeDtor(Node* node) {
+    ASSERT(node != NULL, "NULL POINTER WAS PASSED!\n");
+    FREE(node)
 
     return SUCCESS;
 }
@@ -127,6 +134,21 @@ int SubTreeHaveArgs(Node* node) {
     if (node->type == VAR) return 1;
 
     return SubTreeHaveArgs(node->left) + SubTreeHaveArgs(node->right);
+}
+
+FuncReturnCode SubTreeToNum(Node* node, NodeData value) {
+    ASSERT(node != NULL, "NULL POINTER WAS PASSED!\n");
+
+    node->data = value;
+    node->type = NUM;
+
+    SubTreeDtor(node->left);
+    SubTreeDtor(node->right);
+
+    node->left = NULL;
+    node->right = NULL;
+
+    return SUCCESS;
 }
 
 void SyntaxError() {
@@ -212,6 +234,30 @@ Node* GetN(ReadString* rs) {
         SyntaxError();
     }
     return CreateNode(NUM, val, NULL, NULL);
+}
+
+FuncReturnCode ConnectChildWithParent(Node* node, NodeLocation location) {
+
+    if (!node) return SUCCESS;
+
+    Node* child_node = location == LEFT ? node->left : node->right;
+
+    if (!child_node) fprintf(stderr, RED("Nothing to connect, child null pointer"));
+
+    node->data  = child_node->data;
+    node->type = child_node->type;
+
+    if (child_node == node->left)
+        TreeNodeDtor(node->right);
+    else
+        TreeNodeDtor(node->left);
+
+    node->left  = child_node->left;
+    node->right = child_node->right;
+
+    TreeNodeDtor(child_node);
+
+    return SUCCESS;
 }
 
 /*ReadString* ReadExpFromFile(const char* filename) {

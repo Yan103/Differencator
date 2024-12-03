@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "TreeDump.h"
+#include "Operations.h"
 
 /// @brief Constant for LOG filename
 const char* LOG_FILENAME            = "../Differencator/DumpFiles/log.html";
@@ -15,29 +16,6 @@ const char* DOT_FILENAME            = "../Differencator/DumpFiles/dump.dot";
 
 /// @brief Constant for command busser size
 const int   COMMAND_BUFFER_CONSTANT = 500;
-
-// TODO: UBERI THIS CRIIIIINGEEE !!!!
-const char* PLUS_CONST           = "+";
-const char* MINUS_CONST          = "-";
-const char* MULTIPLICATION_CONST = "*";
-const char* DIVISION_CONST       = "/";
-const char* POW_CONST            = "^";
-const char* EXP_CONST            = "e";
-const char* LN_CONST             = "ln";
-const char* SQRT_CONST           = "√";
-const char* SIN_CONST            = "sin";
-const char* COS_CONST            = "cos";
-const char* TG_CONST             = "tg";
-const char* CTG_CONST            = "ctg";
-const char* ASIN_CONST           = "arcsin";
-const char* ACOS_CONST           = "arccos";
-const char* ATG_CONST            = "arctg";
-const char* ACTG_CONST           = "arcctg";
-const char* SH_CONST             = "sh";
-const char* CH_CONST             = "ch";
-const char* TH_CONST             = "th";
-const char* CTH_CONST            = "cth";
-const char* ERROR_CONST          = "ERROR";
 
 /*!
     @brief Function that calls DUMP
@@ -134,31 +112,13 @@ FuncReturnCode CreateDotBase(FILE* filename, Tree* tree) {
 }
 
 static const char* GetOperation(NodeData data) {
-    switch ((int)data) {
-        // TODO other operations
-        case ADD:  return PLUS_CONST;
-        case SUB:  return MINUS_CONST;
-        case MUL:  return MULTIPLICATION_CONST;
-        case DIV:  return DIVISION_CONST;
-        case POW:  return POW_CONST;
-        case SIN:  return SIN_CONST;
-        case COS:  return COS_CONST;
-        case TG:   return TG_CONST;
-        case CTG:  return CTG_CONST;
-        case LN:   return LN_CONST;
-        case SQRT: return SQRT_CONST;
-        case EXP:  return EXP_CONST;
-        case ASIN: return ASIN_CONST;
-        case ACOS: return ACOS_CONST;
-        case ATG:  return ATG_CONST;
-        case ACTG: return ACTG_CONST;
-        case SH:   return SH_CONST;
-        case CH:   return CH_CONST;
-        case TH:   return TH_CONST;
-        case CTH:  return CTH_CONST;
-        default:   return ERROR_CONST;
+    for (size_t i = 0; i < OPERATIONS_COUNT; i++) {
+        if ((int)data == OPERATIONS[i].OpCode) {
+            return OPERATIONS[i].name;
+        }
     }
 
+    return NULL;
 }
 
 static void CreateColourNodeByType(FILE* filename, Node* node) {

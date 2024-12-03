@@ -2,9 +2,24 @@
 #define DIFFERENCATOR_H
 
 #include <stdio.h>
+#include <math.h>
 
 #include "BinaryTree.h"
 #include "Operations.h"
+
+static const double EPS = 1e-8; /// A small value to compare numbers of the type
+
+/*!
+   The function compares a number with zero
+   \param [in] number - number
+   \return Returns 1 if the number is zero, otherwise 0
+*/
+static bool is_zero(double number) {
+   return fabs(number) < EPS;
+}
+
+#define IS_ZERO(number) is_zero(number)
+#define  IS_ONE(number) is_zero(number - 1)
 
 #define _NUM(num)         CreateNode(NUM, num, NULL, NULL)
 #define _ADD(LEFT, RIGHT) CreateNode(BI_OP, ADD, LEFT, RIGHT)
