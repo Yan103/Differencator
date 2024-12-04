@@ -15,6 +15,8 @@
 #include "BinaryTree.h"
 #include "Operations.h"
 
+const int MAX_NAME_LENGTH = 20;
+
 /// @brief Type of items in a nodes' data
 typedef double NodeData;
 
@@ -48,8 +50,8 @@ struct Tree {
 };
 
 struct ReadString {
-    const char* s;
-    int     p = 0;
+    char*    string;
+    int pointer = 0;
 };
 
 /*!
@@ -93,11 +95,16 @@ Node* GetG(ReadString* rs);
 Node* GetN(ReadString* rs);
 Node* GetT(ReadString* rs);
 Node* GetB(ReadString* rs);
+Node* GetS(ReadString* rs);
+Node* GetV(ReadString* rs);
+Node* GetF(ReadString* rs, const char* read_name);
 
-void SyntaxError() __attribute__ ((noreturn));
+void Error() __attribute__ ((noreturn));
+
+ReadString* ReadExpFromFile(const char* filename);
+
+FuncReturnCode ReadStringDtor(ReadString* rs);
 
 FuncReturnCode ConnectChildWithParent(Node* node, NodeLocation location);
-
-//ReadString* ReadExpFromFile(const char* filename);
 
 #endif // BINARY_TREE_H

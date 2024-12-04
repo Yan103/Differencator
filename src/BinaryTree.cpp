@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include "BinaryTree.h"
@@ -90,42 +91,9 @@ FuncReturnCode TreeDtor(Tree* tree) {
 
 FuncReturnCode TreeNodeDtor(Node* node) {
     ASSERT(node != NULL, "NULL POINTER WAS PASSED!\n");
-    FREE(node)
+    FREE(node);
 
     return SUCCESS;
-}
-
-/*!
-    @brief Function that skips spaces in the file
-    \param  [in] filename - pointer on the file
-    \param [out]   symbol - symbol value
-    @return The last readed symbol
-*/
-static int SkipSpacesInFile(FILE* filename, int symbol) {
-    ASSERT(filename != NULL, "NULL POINTER WAS PASSED!\n");
-
-    while (isspace(symbol = fgetc(filename))) {
-        ;
-    }
-
-    return symbol;
-}
-
-/*!
-    @brief Function that skips symbols in the file until it meets the necessary one
-    \param  [in]    filename - pointer on the file
-    \param [out]      symbol - symbol value
-    \param  [in] find_symbol - find symbol value
-    @return The last readed symbol
-*/
-static int SkipUntilFindSymbol(FILE* filename, int symbol, char find_symbol) {
-    ASSERT(filename != NULL, "NULL POINTER WAS PASSED!\n");
-
-    while ((symbol = fgetc(filename)) != find_symbol){
-        ;
-    }
-
-    return symbol;
 }
 
 int SubTreeHaveArgs(Node* node) {
@@ -151,89 +119,198 @@ FuncReturnCode SubTreeToNum(Node* node, NodeData value) {
     return SUCCESS;
 }
 
-void SyntaxError() {
-    printf("ERROR!\n");
+void Error() {
+    fprintf(stderr, "ERROR!\n");
     abort();
 }
 
 Node* GetG(ReadString* rs) {
+    if (!rs) Error();
+
     Node* val = GetE(rs);
-    if (rs->s[rs->p] != '$') {
-        printf("%s %d\n", __func__, rs->p);
-        SyntaxError();
+
+    if (rs->string[rs->pointer] != '$') {
+        Error();
     }
-    rs->p++;
+    rs->pointer++;
+
     return val;
 }
 
 Node* GetE(ReadString* rs) {
+    if (!rs) Error();
+
     Node* val = GetT(rs);
-    while (rs->s[rs->p] == '+' || rs->s[rs->p] == '-') {
-        int op = rs->s[rs->p];
-        rs->p++;
+    while (rs->string[rs->pointer] == '+' || rs->string[rs->pointer] == '-') {
+        int op = rs->string[rs->pointer];
+        rs->pointer++;
+
         Node* val2 = GetT(rs);
+
         if (op == '+') {
             val = CreateNode(BI_OP, ADD, val, val2);
         } else {
             val = CreateNode(BI_OP, SUB, val, val2);
         }
     }
+
     return val;
 }
 
 Node* GetT(ReadString* rs) {
+    if (!rs) Error();
+
     Node* val = GetP(rs);
-    while (rs->s[rs->p] == '*' || rs->s[rs->p] == '/') {
-        int op = rs->s[rs->p];
-        rs->p++;
+
+    while (rs->string[rs->pointer] == '*' || rs->string[rs->pointer] == '/') {
+        int op = rs->string[rs->pointer];
+
+        rs->pointer++;
         Node* val2 = GetP(rs);
+
         if (op == '*') {
             val = CreateNode(BI_OP, MUL, val, val2);
         } else {
             val = CreateNode(BI_OP, DIV, val, val2);
         }
     }
+
     return val;
 }
 
 Node* GetP(ReadString* rs) {
+    if (!rs) Error();
+
     Node* val = GetB(rs);
-    while (rs->s[rs->p] == '^') {
-        rs->p++;
-        Node* val2 = GetB(rs);
-        val = CreateNode(BI_OP, POW, val, val2);
+
+    if (rs->string[rs->pointer] == '^') {
+        rs->pointer++;
+        Node* val2 = GetP(rs);
+
+        return CreateNode(BI_OP, POW, val, val2);
     }
     return val;
 }
 
 Node* GetB(ReadString* rs) {
-    if (rs->s[rs->p] == '(') {
-        rs->p++;
+    if (!rs) Error();
+
+    if (rs->string[rs->pointer] == '(') {
+        rs->pointer++;
         Node* val = GetE(rs);
-        if (rs->s[rs->p] != ')') {
-            printf("%s\n", __func__);
-            SyntaxError();
+
+        if (rs->string[rs->pointer] != ')') {
+            Error();
         }
-        rs->p++;
+        rs->pointer++;
+
         return val;
     } else {
-        return GetN(rs);
+        return GetS(rs);
     }
 }
 
+Node* GetS(ReadString* rs) {
+    if (!rs) Error();
+
+    int old_p = rs->pointer;
+    Node* val = GetV(rs);
+
+    if (old_p == rs->pointer) return GetN(rs);
+
+    return val;
+}
+
+Node* GetV(ReadString* rs) {
+    if (!rs) Error();
+
+    int  old_p = rs->pointer;
+    char read_name[MAX_NAME_LENGTH] = {};
+
+    while ((('a' <= rs->string[rs->pointer] && rs->string[rs->pointer] <= 'z') ||
+            ('A' <= rs->string[rs->pointer] && rs->string[rs->pointer] <= 'Z')) &&
+            (rs->pointer - old_p < MAX_NAME_LENGTH)) {
+
+            read_name[rs->pointer - old_p] = rs->string[rs->pointer];
+        rs->pointer++;
+    }
+
+    if (old_p == rs->pointer) return NULL;
+
+    if (rs->pointer - old_p == 1 && rs->string[rs->pointer] != '(') {
+        return CreateNode(VAR, (int)(*read_name), NULL, NULL);
+    }
+
+    else if (rs->string[rs->pointer] == '(') {
+        rs->pointer++;
+        Node* val = GetF(rs, read_name);
+
+        if (rs->string[rs->pointer] != ')') Error();
+        rs->pointer++;
+
+        return val;
+    }
+
+    Error();
+    return NULL;
+}
+
+Node* GetF(ReadString* rs, const char* read_name) {
+    if (!rs || !read_name) Error();
+
+    Node* val = GetE(rs);
+
+    // TODO clean this cringe (mb use DSL and codegeneration?)
+    if        (strcmp(read_name, "sin") == 0) {
+        return CreateNode(UN_OP, SIN, NULL, val);
+    } else if (strcmp(read_name, "cos") == 0) {
+        return CreateNode(UN_OP, COS, NULL, val);
+    } else if (strcmp(read_name, "tg") == 0) {
+        return CreateNode(UN_OP, TG, NULL, val);
+    } else if (strcmp(read_name, "ctg") == 0) {
+        return CreateNode(UN_OP, CTG, NULL, val);
+    } else if (strcmp(read_name, "arcsin") == 0) {
+        return CreateNode(UN_OP, ASIN, NULL, val);
+    } else if (strcmp(read_name, "arccos") == 0) {
+        return CreateNode(UN_OP, ACOS, NULL, val);
+    } else if (strcmp(read_name, "arctg") == 0) {
+        return CreateNode(UN_OP, ATG, NULL, val);
+    } else if (strcmp(read_name, "arcctg") == 0) {
+        return CreateNode(UN_OP, ACTG, NULL, val);
+    } else if (strcmp(read_name, "exp") == 0) {
+        return CreateNode(UN_OP, EXP, NULL, val);
+    } else if (strcmp(read_name, "√") == 0) {
+        return CreateNode(UN_OP, SQRT, NULL, val);
+    } else if (strcmp(read_name, "ln") == 0) {
+        return CreateNode(UN_OP, LN, NULL, val);
+    } else if (strcmp(read_name, "sh") == 0) {
+        return CreateNode(UN_OP, SH, NULL, val);
+    } else if (strcmp(read_name, "ch") == 0) {
+        return CreateNode(UN_OP, CH, NULL, val);
+    } else if (strcmp(read_name, "th") == 0) {
+        return CreateNode(UN_OP, TH, NULL, val);
+    } else if (strcmp(read_name, "cth") == 0) {
+        return CreateNode(UN_OP, CTH, NULL, val);
+    }
+
+    Error();
+    return NULL;
+}
+
 Node* GetN(ReadString* rs) {
-    int val = 0;
-    int old_p = rs->p;
-    while  ('0' <= rs->s[rs->p] && rs->s[rs->p] <= '9') {
-        val *= 10;
-        val += rs->s[rs->p] - '0';
-        rs->p++;
+    if (!rs) Error();
+
+    int old_p = rs->pointer;
+    char* end = {};
+
+    NodeData number = strtod(&(rs->string[rs->pointer]), &end);
+
+    if (rs->string[old_p - 1] == *end) {
+        Error();
     }
-    if (old_p == rs->p) {
-        printf("%s\n", __func__);
-        SyntaxError();
-    }
-    return CreateNode(NUM, val, NULL, NULL);
+    rs->pointer += end - &(rs->string[old_p]);
+
+    return CreateNode(NUM, number, NULL, NULL);
 }
 
 FuncReturnCode ConnectChildWithParent(Node* node, NodeLocation location) {
@@ -260,21 +337,51 @@ FuncReturnCode ConnectChildWithParent(Node* node, NodeLocation location) {
     return SUCCESS;
 }
 
-/*ReadString* ReadExpFromFile(const char* filename) {
-    ASSERT(filename != NULL, "NULL POINTER WAS PASSED!\n");
+static size_t GetFileLength(const char* filename) {
+    if (!filename) return NULL;
 
-    FILE* read_file = fopen(filename, "r");
-    if (!read_file) {
-        fprintf(stderr, "Error with occured file!\n");
+    struct stat st = {};
+    stat(filename, &st);
 
+    return st.st_size;
+}
+
+ReadString* ReadExpFromFile(const char* filename) {
+    if (!filename) {
+        fprintf(stderr, "Error with occured the filename pointer!\n");
         return NULL;
     }
 
-    char* buffer = (char*) calloc(1000, sizeof(char));
-    fread(buffer, sizeof(char), 1000, read_file);
+    ReadString* rs = (ReadString*) calloc(1, sizeof(ReadString));
+    if (!rs) {
+        fprintf(stderr, "Memory error!\n");
+        return NULL;
+    }
 
-    ReadString rs = {.s = buffer, .p = 0};
-    fclose(read_file);
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        fprintf(stderr, "Error with occured with open the file!\n");
+        return NULL;
+    }
 
-    return &rs;
-}*/
+    size_t file_size = GetFileLength(filename);
+
+    rs->string = (char*) calloc(file_size, sizeof(char));
+    if (!rs->string) {
+        fprintf(stderr, "Memory error!\n");
+        return NULL;
+    }
+
+    fread(rs->string, sizeof(char), file_size, file);
+
+    return rs;
+}
+
+FuncReturnCode ReadStringDtor(ReadString* rs) {
+    ASSERT(rs != NULL, "NULL POINTER WAS PASSED!\n");
+
+    FREE(rs->string);
+    FREE(rs);
+
+    return SUCCESS;
+}

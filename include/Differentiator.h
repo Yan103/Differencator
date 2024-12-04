@@ -51,7 +51,7 @@ enum TreeSimplifyCode {
 
 Node* Differentiator(Node* node);
 
-Tree* TreeDiff(Node* root);
+Tree* TreeDiff(Tree* tree);
 
 Node* SubTreeCopy(Node* node);
 

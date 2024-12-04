@@ -73,12 +73,14 @@ Node* Differentiator(Node* node) {
     return NULL;
 }
 
-Tree* TreeDiff(Node* root) {
-    ASSERT(root != NULL, "NULL POINTER WAS PASSED!\n");
+Tree* TreeDiff(Tree* tree) {
+    ASSERT(tree != NULL, "NULL POINTER WAS PASSED!\n");
 
-    Node* diff_root = Differentiator(root);
+    Node* diff_root = Differentiator(tree->root);
 
     Tree* diff_tree = TreeCtor(diff_root);
+
+    TREE_DUMP(diff_tree, "%s", __func__);
 
     TreeSimplify(diff_tree);
 
@@ -323,7 +325,6 @@ TreeSimplifyCode SubTreeSimplifyTrivialCases(Node* node, int* tree_changed_flag)
             break;
 
         default:
-            fprintf(stderr, "The program does not know such a simplification...\n");
             break;
     }
 
