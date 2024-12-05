@@ -5,63 +5,106 @@
 #include "Differentiator.h"
 #include "Tools.h"
 #include "TreeDump.h"
+#include "LaTeXCreate.h"
+#include "MathPhrases.h"
 
-Node* Differentiator(Node* node) {
+Node* Differentiator(Node* node, FILE* tex_file) {
     // TODO checks
 
     if (node->type == NUM) return _NUM(0);
 
     if (node->type == VAR) return _NUM(1);
 
+    Node* diff_node = NULL;
+
     switch ((int) node->data) {
-        case  ADD: return _ADD(dL, dR);
+        case  ADD:
+            diff_node = _ADD(dL, dR);
+            break;
 
-        case  SUB: return _SUB(dL, dR);
+        case  SUB:
+            diff_node = _SUB(dL, dR);
+            break;
 
-        case  MUL: return _ADD(_MUL(dL, cR), _MUL(cL, dR));
+        case  MUL:
+            diff_node = _ADD(_MUL(dL, cR), _MUL(cL, dR));
+            break;
 
-        case  DIV: return _DIV(_SUB(_MUL(dL, cR), _MUL(cL, dR)), _MUL(cL, cR));
+        case  DIV:
+            diff_node = _DIV(_SUB(_MUL(dL, cR), _MUL(cL, dR)), _MUL(cL, cR));
+            break;
 
-        case  SIN: return _MUL(dR, _COS(cR));
+        case  SIN:
+            diff_node = _MUL(dR, _COS(cR));
+            break;
 
-        case  COS: return _MUL(dR, _SUB(_NUM(0), _SIN(cR)));
+        case  COS:
+            diff_node = _MUL(dR, _SUB(_NUM(0), _SIN(cR)));
+            break;
 
-        case   TG: return _MUL(dR, _DIV(_NUM(1), _POW(_COS(cR), _NUM(2))));
+        case   TG:
+            diff_node = _MUL(dR, _DIV(_NUM(1), _POW(_COS(cR), _NUM(2))));
+            break;
 
-        case  CTG: return _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SIN(cR), _NUM(2)))));
+        case  CTG:
+            diff_node = _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SIN(cR), _NUM(2)))));
+            break;
 
-        case  EXP: return _MUL(dR, _EXP(cR));
+        case  EXP:
+            diff_node = _MUL(dR, _EXP(cR));
+            break;
 
-        case   SH: return _MUL(dR, _CH(cR));
+        case   SH:
+            diff_node = _MUL(dR, _CH(cR));
+            break;
 
-        case   CH: return _MUL(dR, _SH(cR));
+        case   CH:
+            diff_node = _MUL(dR, _SH(cR));
+            break;
 
-        case   TH: return _MUL(dR, _DIV(_NUM(1), _POW(_CH(cR), _NUM(2))));
+        case   TH:
+            diff_node = _MUL(dR, _DIV(_NUM(1), _POW(_CH(cR), _NUM(2))));
+            break;
 
-        case  CTH: return _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SH(cR), _NUM(2)))));
+        case  CTH:
+            diff_node = _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SH(cR), _NUM(2)))));
+            break;
 
-        case ASIN: return _MUL(dR, _DIV(_NUM(1), _POW(_SUB(_NUM(1), _POW(cR, _NUM(2))), _NUM(0.5))));
+        case ASIN:
+            diff_node = _MUL(dR, _DIV(_NUM(1), _POW(_SUB(_NUM(1), _POW(cR, _NUM(2))), _NUM(0.5))));
+            break;
 
-        case ACOS: return _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SUB(_NUM(1), _POW(cR, _NUM(2))), _NUM(0.5)))));
+        case ACOS:
+            diff_node = _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _POW(_SUB(_NUM(1), _POW(cR, _NUM(2))), _NUM(0.5)))));
+            break;
 
-        case  ATG: return _MUL(dR, _DIV(_NUM(1), _ADD(_NUM(1), _POW(cR, _NUM(2)))));
+        case  ATG:
+            diff_node = _MUL(dR, _DIV(_NUM(1), _ADD(_NUM(1), _POW(cR, _NUM(2)))));
+            break;
 
-        case ACTG: return _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _ADD(_NUM(1), _POW(cR, _NUM(2))))));
+        case ACTG:
+            diff_node = _MUL(dR, _SUB(_NUM(0), _DIV(_NUM(1), _ADD(_NUM(1), _POW(cR, _NUM(2))))));
+            break;
 
-        case   LN: return _MUL(dR, _DIV(_NUM(1), cR));
+        case   LN:
+            diff_node = _MUL(dR, _DIV(_NUM(1), cR));
+            break;
 
-        case SQRT: return _MUL(dR, _DIV(_NUM(1), _MUL(_NUM(2), _POW(cR, _NUM(0.5)))));
+        case SQRT:
+            diff_node = _MUL(dR, _DIV(_NUM(1), _MUL(_NUM(2), _POW(cR, _NUM(0.5)))));
+            break;
 
-        case  POW: { // TODO check it in tests (mb tut est' oshibki...)
+        case  POW: {
             if        (!SubTreeHaveArgs(node->left) && !SubTreeHaveArgs(node->right)) {  //* const^const
-                return _NUM(0);
+                diff_node =_NUM(0);
             } else if (!SubTreeHaveArgs(node->left) &&  SubTreeHaveArgs(node->right)) {  //* const^variable
-                return _MUL(dR, _MUL(_POW(cL, cR), _LN(cL)));
+                diff_node = _MUL(dR, _MUL(_POW(cL, cR), _LN(cL)));
             } else if ( SubTreeHaveArgs(node->left) && !SubTreeHaveArgs(node->right)) {  //* variable^const
-                return _MUL(dL, _MUL(cR, _POW(cL, _SUB(cR, _NUM(1)))));
+                diff_node = _MUL(dL, _MUL(cR, _POW(cL, _SUB(cR, _NUM(1)))));
             } else {                                                                     //* variable^variable
-                return _MUL(_ADD(_MUL(dR, _LN(cL)), _DIV(_MUL(dL, cR), cL)), _POW(cL, cR));
+                diff_node = _MUL(_ADD(_MUL(dR, _LN(cL)), _DIV(_MUL(dL, cR), cL)), _POW(cL, cR));
             }
+            break;
         }
 
         default: {
@@ -70,19 +113,22 @@ Node* Differentiator(Node* node) {
         }
     }
 
-    return NULL;
+    if (SubTreeSimplify(diff_node) != TREE_SIMPLIFY_SUCCESS) fprintf(stderr, RED("Unknown error, please, stop it!\n"));
+
+    PRINT_TO_TEX("%s\n\n", MATH_PHRASES[rand() % MATAN_PHRASES_COUNT]);
+
+    return diff_node;
 }
 
-Tree* TreeDiff(Tree* tree) {
-    ASSERT(tree != NULL, "NULL POINTER WAS PASSED!\n");
+Tree* TreeDiff(Tree* tree, FILE* tex_file) {
+    ASSERT(tree     != NULL, "NULL POINTER WAS PASSED!\n");
+    ASSERT(tex_file != NULL, "NULL POINTER WAS PASSED!\n");
 
-    Node* diff_root = Differentiator(tree->root);
+    Node* diff_root = Differentiator(tree->root, tex_file);
 
     Tree* diff_tree = TreeCtor(diff_root);
 
     TREE_DUMP(diff_tree, "%s", __func__);
-
-    TreeSimplify(diff_tree);
 
     return diff_tree;
 }
@@ -102,12 +148,10 @@ TreeSimplifyCode TreeSimplify(Tree* tree) {
 }
 
 TreeSimplifyCode SubTreeSimplify(Node* node) {
-
     if (!node) return TREE_SIMPLIFY_SUCCESS;
 
-    TreeSimplifyCode simpify_status = TREE_SIMPLIFY_SUCCESS;
-
     int tree_changed_flag = 0;
+    TreeSimplifyCode simpify_status = TREE_SIMPLIFY_SUCCESS;
 
     do {
         tree_changed_flag = 0;

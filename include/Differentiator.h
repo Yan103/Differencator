@@ -35,8 +35,8 @@ static bool is_zero(double number) {
 #define  _SH(RIGHT)       CreateNode(UN_OP,  SH, NULL, RIGHT)
 #define  _CH(RIGHT)       CreateNode(UN_OP,  CH, NULL, RIGHT)
 
-#define dL Differentiator(node->left)
-#define dR Differentiator(node->right)
+#define dL Differentiator(node->left, tex_file)
+#define dR Differentiator(node->right, tex_file)
 
 #define cL SubTreeCopy(node->left)
 #define cR SubTreeCopy(node->right)
@@ -49,9 +49,9 @@ enum TreeSimplifyCode {
     TREE_SIMPLIFY_ERROR   = -1,
 };
 
-Node* Differentiator(Node* node);
+Node* Differentiator(Node* node, FILE* tex_file);
 
-Tree* TreeDiff(Tree* tree);
+Tree* TreeDiff(Tree* tree, FILE* tex_file);
 
 Node* SubTreeCopy(Node* node);
 

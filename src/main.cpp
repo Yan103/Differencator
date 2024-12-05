@@ -30,7 +30,7 @@ int main() {
 
         TREE_DUMP(tree, "%s", __func__);
 
-        Tree* diff_tree = TreeDiff(tree);
+        Tree* diff_tree = TreeDiff(tree, tex_file);
 
         TeXEndAndClose(tex_file);
 
@@ -39,9 +39,7 @@ int main() {
 
         TREE_DUMP(diff_tree, "%s", __func__);
 
-        TreeDtor(tree);
-        TreeDtor(diff_tree);
-        ReadStringDtor(rs);
+        MemoryFree(tree, diff_tree, rs);
     }
 
     return SUCCESS;

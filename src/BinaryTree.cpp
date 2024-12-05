@@ -127,6 +127,8 @@ void Error() {
 Node* GetG(ReadString* rs) {
     if (!rs) Error();
 
+    //TODO macro SHIFT() -> p++ !!!
+
     Node* val = GetE(rs);
 
     if (rs->string[rs->pointer] != '$') {
@@ -382,6 +384,18 @@ FuncReturnCode ReadStringDtor(ReadString* rs) {
 
     FREE(rs->string);
     FREE(rs);
+
+    return SUCCESS;
+}
+
+FuncReturnCode MemoryFree(Tree* tree, Tree* diff_tree, ReadString* rs) {
+    ASSERT(tree      != NULL, "NULL POINTER WAS PASSED!\n");
+    ASSERT(diff_tree != NULL, "NULL POINTER WAS PASSED!\n");
+    ASSERT(rs        != NULL, "NULL POINTER WAS PASSED!\n");
+
+    TreeDtor(tree);
+    TreeDtor(diff_tree);
+    ReadStringDtor(rs);
 
     return SUCCESS;
 }

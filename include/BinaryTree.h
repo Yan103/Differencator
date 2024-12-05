@@ -107,4 +107,6 @@ FuncReturnCode ReadStringDtor(ReadString* rs);
 
 FuncReturnCode ConnectChildWithParent(Node* node, NodeLocation location);
 
+FuncReturnCode MemoryFree(Tree* tree, Tree* diff_tree, ReadString* rs);
+
 #endif // BINARY_TREE_H
