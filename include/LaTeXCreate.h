@@ -11,4 +11,8 @@ FuncReturnCode TeXHeader(FILE* tex_file);
 
 FuncReturnCode TeXEndAndClose(FILE* tex_file);
 
+FuncReturnCode TeXSubTreePrint(FILE* tex_file, const Node* node);
+
+int FindOperation(const int node_type);
+
 #endif // LATEXCREATE_H

@@ -1,1 +1,1 @@
-ln(cos(exp(arctg(x^(0.5)))))$
+sin(tg(2*x))*x^5$
