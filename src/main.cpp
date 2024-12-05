@@ -8,7 +8,8 @@
 #include "LaTeXCreate.h"
 
 const char* INPUT_FILENAME = "../Differencator/Expressions/test1.txt";
-const char* TEX_FILENAME   = "../Differencator/Solution.tex";
+#define TEX_DIRECTORY "TeXFiles/"
+const char* TEX_FILENAME   = "../Differencator/TeXFiles/Solution.tex";
 
 int main() {
     srand((unsigned int)time(NULL));
@@ -33,7 +34,8 @@ int main() {
 
         TeXEndAndClose(tex_file);
 
-        system("pdflatex Solution.tex");
+        system("pdflatex -aux-directory=" TEX_DIRECTORY " -output-directory="
+                TEX_DIRECTORY " ../Differencator/TeXFiles/Solution.tex > NUL 2>&1");
 
         TREE_DUMP(diff_tree, "%s", __func__);
 

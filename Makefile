@@ -21,6 +21,7 @@ EXECUTABLE= $(BIN_DIR)/differencator
 EXTENSION1= .html
 EXTENSION2= .png
 DUMP_DIR  = DumpFiles
+TEX_DIR   = TeXFiles
 
 all: $(EXECUTABLE)
 
@@ -40,3 +41,6 @@ clean:
 clear_dump:
 	@find $(DUMP_DIR) -type f -name "*$(EXTENSION1)" -exec rm -f {} +
 	@find $(DUMP_DIR) -type f -name "*$(EXTENSION2)" -exec rm -f {} +
+
+clear_tex:
+	@rm -v $(TEX_DIR)/*
