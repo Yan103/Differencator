@@ -30,6 +30,10 @@ int main() {
 
         TREE_DUMP(tree, "%s", __func__);
 
+        PRINT_TO_TEX("$$ ");
+        TeXSubTreePrint(tex_file, tree->root);
+        PRINT_TO_TEX(" $$\n");
+
         Tree* diff_tree = TreeDiff(tree, tex_file);
 
         TeXEndAndClose(tex_file);
