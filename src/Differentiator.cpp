@@ -31,7 +31,7 @@ Node* Differentiator(Node* node, FILE* tex_file) {
             break;
 
         case  DIV:
-            diff_node = _DIV(_SUB(_MUL(dL, cR), _MUL(cL, dR)), _MUL(cL, cR));
+            diff_node = _DIV(_SUB(_MUL(dL, cR), _MUL(cL, dR)), _POW(cR, _NUM(2)));
             break;
 
         case  SIN:

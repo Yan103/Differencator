@@ -87,8 +87,14 @@ digraph tree{
 	node0x603000000a90[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="-1"]
 	node0x603000000ac0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="/"]
 	node0x603000000ac0->node0x603000000940
-	node0x603000000940[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="x"]
-	node0x603000000940[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="x"]
+	node0x603000000940[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="^"]
+	node0x603000000940->node0x603000000910
+	node0x603000000910[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="x"]
+	node0x603000000910[shape=Mrecord,style="rounded,filled",fillcolor="lightpink",label="x"]
+	node0x603000000940[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="^"]
+	node0x603000000940->node0x6030000008e0
+	node0x6030000008e0[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="2"]
+	node0x6030000008e0[shape=Mrecord,style="rounded,filled",fillcolor="lightblue",label="2"]
 	node0x603000000af0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="*"]
 	node0x603000000af0->node0x6030000008b0
 	node0x6030000008b0[shape=Mrecord,style="rounded,filled",fillcolor="lightgreen",label="/"]
