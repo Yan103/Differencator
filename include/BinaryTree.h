@@ -50,8 +50,8 @@ struct Tree {
 };
 
 struct ReadString {
-    char*    string;
-    int pointer = 0;
+    char*         string;
+    size_t   pointer = 0;
 };
 
 /*!
@@ -99,7 +99,7 @@ Node* GetS(ReadString* rs);
 Node* GetV(ReadString* rs);
 Node* GetF(ReadString* rs, const char* read_name);
 
-void Error() __attribute__ ((noreturn));
+void SyntaxError() __attribute__ ((noreturn));
 
 ReadString* ReadExpFromFile(const char* filename);
 

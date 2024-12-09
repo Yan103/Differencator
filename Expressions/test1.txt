@@ -1,1 +1,1 @@
-tg(2*exp(x^2))+x^5$
+sin(cos(x^3)*ln(tan((1/x))))$

@@ -39,7 +39,7 @@ int main() {
         TeXEndAndClose(tex_file);
 
         system("pdflatex -aux-directory=" TEX_DIRECTORY " -output-directory="
-                TEX_DIRECTORY " ../Differencator/TeXFiles/Solution.tex > NUL 2>&1");
+                TEX_DIRECTORY " ../Differencator/TeXFiles/Solution.tex > /dev/null 2> /dev/null");
 
         TREE_DUMP(diff_tree, "%s", __func__);
 

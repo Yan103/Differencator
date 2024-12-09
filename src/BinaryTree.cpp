@@ -119,20 +119,20 @@ FuncReturnCode SubTreeToNum(Node* node, NodeData value) {
     return SUCCESS;
 }
 
-void Error() {
-    fprintf(stderr, "ERROR!\n");
+void SyntaxError() {
+    fprintf(stderr, "SyntaxError!\n");
     abort();
 }
 
 Node* GetG(ReadString* rs) {
-    if (!rs) Error();
+    if (!rs) SyntaxError();
 
     //TODO macro SHIFT() -> p++ !!!
 
     Node* val = GetE(rs);
 
     if (rs->string[rs->pointer] != '$') {
-        Error();
+        SyntaxError();
     }
     rs->pointer++;
 
@@ -140,7 +140,7 @@ Node* GetG(ReadString* rs) {
 }
 
 Node* GetE(ReadString* rs) {
-    if (!rs) Error();
+    if (!rs) SyntaxError();
 
     Node* val = GetT(rs);
     while (rs->string[rs->pointer] == '+' || rs->string[rs->pointer] == '-') {
@@ -160,7 +160,7 @@ Node* GetE(ReadString* rs) {
 }
 
 Node* GetT(ReadString* rs) {
-    if (!rs) Error();
+    if (!rs) SyntaxError();
 
     Node* val = GetP(rs);
 
@@ -181,7 +181,7 @@ Node* GetT(ReadString* rs) {
 }
 
 Node* GetP(ReadString* rs) {
-    if (!rs) Error();
+    if (!rs) SyntaxError();
 
     Node* val = GetB(rs);
 
@@ -195,14 +195,14 @@ Node* GetP(ReadString* rs) {
 }
 
 Node* GetB(ReadString* rs) {
-    if (!rs) Error();
+    if (!rs) SyntaxError();
 
     if (rs->string[rs->pointer] == '(') {
         rs->pointer++;
         Node* val = GetE(rs);
 
         if (rs->string[rs->pointer] != ')') {
-            Error();
+            SyntaxError();
         }
         rs->pointer++;
 
@@ -213,9 +213,9 @@ Node* GetB(ReadString* rs) {
 }
 
 Node* GetS(ReadString* rs) {
-    if (!rs) Error();
+    if (!rs) SyntaxError();
 
-    int old_p = rs->pointer;
+    size_t old_p = rs->pointer;
     Node* val = GetV(rs);
 
     if (old_p == rs->pointer) return GetN(rs);
@@ -224,93 +224,64 @@ Node* GetS(ReadString* rs) {
 }
 
 Node* GetV(ReadString* rs) {
-    if (!rs) Error();
+    if (!rs) SyntaxError();
 
-    int  old_p = rs->pointer;
+    size_t  old_p = rs->pointer;
     char read_name[MAX_NAME_LENGTH] = {};
 
-    while ((('a' <= rs->string[rs->pointer] && rs->string[rs->pointer] <= 'z') ||
-            ('A' <= rs->string[rs->pointer] && rs->string[rs->pointer] <= 'Z')) &&
-            (rs->pointer - old_p < MAX_NAME_LENGTH)) {
-
-            read_name[rs->pointer - old_p] = rs->string[rs->pointer];
+    //! isalpha
+    while (isalpha(rs->string[rs->pointer]) && rs->pointer - old_p < MAX_NAME_LENGTH) {
+        read_name[rs->pointer - old_p] = rs->string[rs->pointer];
         rs->pointer++;
     }
 
     if (old_p == rs->pointer) return NULL;
 
     if (rs->pointer - old_p == 1 && rs->string[rs->pointer] != '(') {
-        return CreateNode(VAR, (int)(*read_name), NULL, NULL);
+        return CreateNode(VAR, (int)(*read_name), NULL, NULL); //! podumai
     }
 
     else if (rs->string[rs->pointer] == '(') {
         rs->pointer++;
         Node* val = GetF(rs, read_name);
 
-        if (rs->string[rs->pointer] != ')') Error();
+        if (rs->string[rs->pointer] != ')') SyntaxError();  //! TODO macro for assert (SyntaxAssert)
         rs->pointer++;
 
         return val;
     }
 
-    Error();
+    SyntaxError();
     return NULL;
 }
 
 Node* GetF(ReadString* rs, const char* read_name) {
-    if (!rs || !read_name) Error();
+    if (!rs || !read_name) SyntaxError();
 
     Node* val = GetE(rs);
 
-    // TODO clean this cringe (mb use DSL and codegeneration?)
-    if        (strcmp(read_name, "sin") == 0) {
-        return CreateNode(UN_OP, SIN, NULL, val);
-    } else if (strcmp(read_name, "cos") == 0) {
-        return CreateNode(UN_OP, COS, NULL, val);
-    } else if (strcmp(read_name, "tg") == 0) {
-        return CreateNode(UN_OP, TG, NULL, val);
-    } else if (strcmp(read_name, "ctg") == 0) {
-        return CreateNode(UN_OP, CTG, NULL, val);
-    } else if (strcmp(read_name, "arcsin") == 0) {
-        return CreateNode(UN_OP, ASIN, NULL, val);
-    } else if (strcmp(read_name, "arccos") == 0) {
-        return CreateNode(UN_OP, ACOS, NULL, val);
-    } else if (strcmp(read_name, "arctg") == 0) {
-        return CreateNode(UN_OP, ATG, NULL, val);
-    } else if (strcmp(read_name, "arcctg") == 0) {
-        return CreateNode(UN_OP, ACTG, NULL, val);
-    } else if (strcmp(read_name, "exp") == 0) {
-        return CreateNode(UN_OP, EXP, NULL, val);
-    } else if (strcmp(read_name, "√") == 0) {
-        return CreateNode(UN_OP, SQRT, NULL, val);
-    } else if (strcmp(read_name, "ln") == 0) {
-        return CreateNode(UN_OP, LN, NULL, val);
-    } else if (strcmp(read_name, "sh") == 0) {
-        return CreateNode(UN_OP, SH, NULL, val);
-    } else if (strcmp(read_name, "ch") == 0) {
-        return CreateNode(UN_OP, CH, NULL, val);
-    } else if (strcmp(read_name, "th") == 0) {
-        return CreateNode(UN_OP, TH, NULL, val);
-    } else if (strcmp(read_name, "cth") == 0) {
-        return CreateNode(UN_OP, CTH, NULL, val);
+    for (size_t i = 0; i < OPERATIONS_COUNT; i++) {
+        if (strcmp(read_name, OPERATIONS[i].name) == 0) {
+            return CreateNode(OPERATIONS[i].OpType, OPERATIONS[i].OpCode, NULL, val);
+        }
     }
 
-    Error();
+    SyntaxError();
     return NULL;
 }
 
 Node* GetN(ReadString* rs) {
-    if (!rs) Error();
+    if (!rs) SyntaxError();
 
-    int old_p = rs->pointer;
+    size_t old_p = rs->pointer;
     char* end = {};
 
     NodeData number = strtod(&(rs->string[rs->pointer]), &end);
 
-    if (rs->string[old_p - 1] == *end) {
-        Error();
+    if (rs->string[old_p - 1] == *end) { // TODO
+        SyntaxError();
     }
-    rs->pointer += end - &(rs->string[old_p]);
+    rs->pointer += (size_t)(end - &rs->string[old_p]);
 
     return CreateNode(NUM, number, NULL, NULL);
 }
@@ -324,7 +295,7 @@ FuncReturnCode ConnectChildWithParent(Node* node, NodeLocation location) {
     if (!child_node) fprintf(stderr, RED("Nothing to connect, child null pointer"));
 
     node->data  = child_node->data;
-    node->type = child_node->type;
+    node->type  = child_node->type;
 
     if (child_node == node->left)
         TreeNodeDtor(node->right);
@@ -345,7 +316,7 @@ static size_t GetFileLength(const char* filename) {
     struct stat st = {};
     stat(filename, &st);
 
-    return st.st_size;
+    return (size_t)st.st_size;
 }
 
 ReadString* ReadExpFromFile(const char* filename) {
@@ -375,6 +346,7 @@ ReadString* ReadExpFromFile(const char* filename) {
     }
 
     fread(rs->string, sizeof(char), file_size, file);
+    fclose(file);
 
     return rs;
 }
