@@ -1,1 +1,1 @@
-sin(cos(x^3)*ln(tan((1/x))))$
+5*cos(x^3)+ln(2)*20*(sin(x))^3$

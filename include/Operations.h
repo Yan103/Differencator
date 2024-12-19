@@ -35,28 +35,29 @@ struct Operation {
     NodeOperatorCodes OpCode;
     const char*         name;
     NodeDataType      OpType;
+    int             priority;
 };
 
 const Operation OPERATIONS[] {
-    { ADD,      "+", BI_OP},
-    { SUB,      "-", BI_OP},
-    { DIV,      "/", BI_OP},
-    { MUL,      "*", BI_OP},
-    { SIN,    "sin", UN_OP},
-    { COS,    "cos", UN_OP},
-    {  TG,    "tan", UN_OP},
-    { CTG,    "cot", UN_OP},
-    {  LN,     "ln", UN_OP},
-    {SQRT,   "sqrt", UN_OP},
-    { EXP,    "exp", UN_OP},
-    { POW,      "^", BI_OP},
-    {ASIN, "arcsin", UN_OP},
-    {ACOS, "arccos", UN_OP},
-    { ATG, "arctan", UN_OP},
-    {  SH,   "sinh", UN_OP},
-    {  CH,   "cosh", UN_OP},
-    {  TH,   "tanh", UN_OP},
-    { CTH,   "coth", UN_OP},
+    { ADD,      "+", BI_OP, 1},
+    { SUB,      "-", BI_OP, 1},
+    { DIV,      "/", BI_OP, 2},
+    { MUL,      "*", BI_OP, 2},
+    { SIN,    "sin", UN_OP, 4},
+    { COS,    "cos", UN_OP, 4},
+    {  TG,    "tan", UN_OP, 4},
+    { CTG,    "cot", UN_OP, 4},
+    {  LN,     "ln", UN_OP, 4},
+    {SQRT,   "sqrt", UN_OP, 4},
+    { EXP,    "exp", UN_OP, 4},
+    { POW,      "^", BI_OP, 3},
+    {ASIN, "arcsin", UN_OP, 4},
+    {ACOS, "arccos", UN_OP, 4},
+    { ATG, "arctan", UN_OP, 4},
+    {  SH,   "sinh", UN_OP, 4},
+    {  CH,   "cosh", UN_OP, 4},
+    {  TH,   "tanh", UN_OP, 4},
+    { CTH,   "coth", UN_OP, 4},
 };
 
 const size_t OPERATIONS_COUNT = sizeof(OPERATIONS) / sizeof(Operation);

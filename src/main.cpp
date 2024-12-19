@@ -17,7 +17,6 @@ int main() {
 
     if (rs) {
         Node* root = GetG(rs);
-
         Tree* tree = TreeCtor(root);
 
         FILE* tex_file = fopen(TEX_FILENAME, "w");
@@ -27,22 +26,19 @@ int main() {
         }
 
         TeXHeader(tex_file);
-
         TREE_DUMP(tree, "%s", __func__);
 
         PRINT_TO_TEX("$$ ");
-        TeXSubTreePrint(tex_file, tree->root);
+        TeXSubTreePrint(tex_file, NULL, tree->root);
         PRINT_TO_TEX(" $$\n");
 
         Tree* diff_tree = TreeDiff(tree, tex_file);
-
         TeXEndAndClose(tex_file);
 
         system("pdflatex -aux-directory=" TEX_DIRECTORY " -output-directory="
                 TEX_DIRECTORY " ../Differencator/TeXFiles/Solution.tex > /dev/null 2> /dev/null");
 
         TREE_DUMP(diff_tree, "%s", __func__);
-
         MemoryFree(tree, diff_tree, rs);
     }
 

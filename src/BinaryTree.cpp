@@ -238,14 +238,14 @@ Node* GetV(ReadString* rs) {
     if (old_p == rs->pointer) return NULL;
 
     if (rs->pointer - old_p == 1 && rs->string[rs->pointer] != '(') {
-        return CreateNode(VAR, (int)(*read_name), NULL, NULL); //! podumai
+        return CreateNode(VAR, (int)(*read_name), NULL, NULL);
     }
 
     else if (rs->string[rs->pointer] == '(') {
         rs->pointer++;
         Node* val = GetF(rs, read_name);
 
-        if (rs->string[rs->pointer] != ')') SyntaxError();  //! TODO macro for assert (SyntaxAssert)
+        if (rs->string[rs->pointer] != ')') SyntaxError();
         rs->pointer++;
 
         return val;
@@ -278,7 +278,7 @@ Node* GetN(ReadString* rs) {
 
     NodeData number = strtod(&(rs->string[rs->pointer]), &end);
 
-    if (rs->string[old_p - 1] == *end) { // TODO
+    if (rs->string[old_p] == *end) {
         SyntaxError();
     }
     rs->pointer += (size_t)(end - &rs->string[old_p]);
@@ -339,7 +339,7 @@ ReadString* ReadExpFromFile(const char* filename) {
 
     size_t file_size = GetFileLength(filename);
 
-    rs->string = (char*) calloc(file_size, sizeof(char));
+    rs->string = (char*) calloc(file_size + 1, sizeof(char));
     if (!rs->string) {
         fprintf(stderr, "Memory error!\n");
         return NULL;

@@ -45,14 +45,15 @@ FuncReturnCode TeXEndAndClose(FILE* tex_file) {
     return SUCCESS;
 }
 
-FuncReturnCode TeXSubTreePrint(FILE* tex_file, const Node* node) {
+FuncReturnCode TeXSubTreePrint(FILE* tex_file, const Node* prev, const Node* node) {
     ASSERT(tex_file != NULL, "NULL POINTER WAS PASSED!\n");
     ASSERT(node     != NULL, "NULL POINTER WAS PASSED!\n");
 
     if (!node) return SUCCESS;
 
     const char* op_name = NULL;
-    int op_number = -1;
+    int op_number       = -1;
+    int need_brackets   = 0;
 
     switch (node->type) {
         case NUM:
@@ -67,21 +68,26 @@ FuncReturnCode TeXSubTreePrint(FILE* tex_file, const Node* node) {
             op_number = FindOperation((int)(node->data));
             op_name = OPERATIONS[op_number].name;
 
-            PRINT_TO_TEX(" ( ");
             PRINT_TO_TEX(" \\%s ", op_name);
-            TeXSubTreePrint(tex_file, node->right);
-            PRINT_TO_TEX(" ) ");
+            TeXSubTreePrint(tex_file, node, node->right);
 
             break;
 
         case BI_OP:
             op_number = FindOperation((int)(node->data));
-            PRINT_TO_TEX(" ( ");
+
+            if (prev &&
+                OPERATIONS[FindOperation((int)(prev->data))].priority >
+                OPERATIONS[FindOperation((int)(node->data))].priority) {
+                need_brackets = 1;
+            }
+
+            if (need_brackets) PRINT_TO_TEX(" ( ");
 
             if (OPERATIONS[op_number].OpCode == DIV) PRINT_TO_TEX(" \\frac");
 
             PRINT_TO_TEX(" { ");
-            TeXSubTreePrint(tex_file, node->left);
+            TeXSubTreePrint(tex_file, node, node->left);
             PRINT_TO_TEX(" } ");
 
             if (OPERATIONS[op_number].OpCode == MUL) {
@@ -89,10 +95,11 @@ FuncReturnCode TeXSubTreePrint(FILE* tex_file, const Node* node) {
             } else if (OPERATIONS[op_number].OpCode != DIV) PRINT_TO_TEX(" %s ", OPERATIONS[op_number].name);
 
             PRINT_TO_TEX(" { ");
-            TeXSubTreePrint(tex_file, node->right);
+            TeXSubTreePrint(tex_file, node, node->right);
             PRINT_TO_TEX(" } ");
 
-            PRINT_TO_TEX(" ) ");
+            if (need_brackets) PRINT_TO_TEX(" ) ");
+
             break;
 
         default:

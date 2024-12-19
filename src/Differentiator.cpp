@@ -118,11 +118,11 @@ Node* Differentiator(Node* node, FILE* tex_file) {
     PRINT_TO_TEX("\\hspace{1cm}%s\n", MATH_PHRASES[rand() % MATAN_PHRASES_COUNT]);
 
     PRINT_TO_TEX("$$ (");
-    TeXSubTreePrint(tex_file, node);
+    TeXSubTreePrint(tex_file, NULL, node);
     PRINT_TO_TEX(")_{x}\' = $$\n");
 
     PRINT_TO_TEX("$$ = ");
-    TeXSubTreePrint(tex_file, diff_node);
+    TeXSubTreePrint(tex_file, NULL, diff_node);
     PRINT_TO_TEX(" $$\n\n");
 
     return diff_node;
@@ -358,6 +358,12 @@ TreeSimplifyCode SubTreeSimplifyTrivialCases(Node* node, int* tree_changed_flag)
         case DIV:
             if (node->left->type == NUM && IS_ZERO(node->left->data)) {
                 SubTreeToNum(node, 0);
+
+                *tree_changed_flag = 1;
+            }
+
+            if (IS_ZERO(node->left->data - node->right->data) && !IS_ZERO(node->right->data)) {
+                SubTreeToNum(node, 1);
 
                 *tree_changed_flag = 1;
             }
